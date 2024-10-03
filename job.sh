@@ -1,8 +1,8 @@
 #! /usr/bin/env bash
 #
 #SBATCH --job-name=ff_test
-#SBATCH --output=ff_test.txt
-#SBATCH --error=error_test.txt
+#SBATCH --output=logs/main.log
+#SBATCH --error=logs/error.log
 #
 #SBATCH --ntasks=1
 #SBATCH --time=10:00:00 # this sets the maximum time the job is allowed before killed

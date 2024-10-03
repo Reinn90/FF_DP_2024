@@ -1,0 +1,59 @@
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/bigdata/users/20658133/Forward-Forward/main.py", line 5, in <module>
+    import torch
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torch/__init__.py", line 629, in <module>
+    from .functional import *  # noqa: F403
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torch/functional.py", line 6, in <module>
+    import torch.nn.functional as F
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torch/nn/__init__.py", line 1, in <module>
+    from .modules import *  # noqa: F403
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torch/nn/modules/__init__.py", line 2, in <module>
+    from .linear import Identity, Linear, Bilinear, LazyLinear
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torch/nn/modules/linear.py", line 6, in <module>
+    from .. import functional as F
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torch/nn/functional.py", line 11, in <module>
+    from .._jit_internal import boolean_dispatch, _overload, BroadcastingList1, BroadcastingList2, BroadcastingList3
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torch/_jit_internal.py", line 26, in <module>
+    import torch.package._mangling as package_mangling
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torch/package/__init__.py", line 12, in <module>
+    from .package_importer import PackageImporter
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torch/package/package_importer.py", line 26, in <module>
+    from ._mock_zipreader import MockZipReader
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torch/package/_mock_zipreader.py", line 17, in <module>
+    _dtype_to_storage = {data_type(0).dtype: data_type for data_type in _storages}
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torch/package/_mock_zipreader.py", line 17, in <dictcomp>
+    _dtype_to_storage = {data_type(0).dtype: data_type for data_type in _storages}
+/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torch/package/_mock_zipreader.py:17: UserWarning: Failed to initialize NumPy: _ARRAY_API not found (Triggered internally at  ../torch/csrc/utils/tensor_numpy.cpp:67.)
+  _dtype_to_storage = {data_type(0).dtype: data_type for data_type in _storages}
+Error executing job with overrides: []
+Traceback (most recent call last):
+  File "/bigdata/users/20658133/Forward-Forward/main.py", line 73, in my_main
+    model = train(opt, model, optimizer)
+  File "/bigdata/users/20658133/Forward-Forward/main.py", line 14, in train
+    train_loader = utils.get_data(opt, "train")
+  File "/bigdata/users/20658133/Forward-Forward/src/utils.py", line 56, in get_data
+    dataset = ff_mnist.FF_MNIST(opt, partition)
+  File "/bigdata/users/20658133/Forward-Forward/src/ff_mnist.py", line 10, in __init__
+    self.mnist = utils.get_MNIST_partition(opt, partition)
+  File "/bigdata/users/20658133/Forward-Forward/src/utils.py", line 82, in get_MNIST_partition
+    mnist = torchvision.datasets.MNIST(
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torchvision/datasets/mnist.py", line 93, in __init__
+    self.data, self.targets = self._load_data()
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torchvision/datasets/mnist.py", line 112, in _load_data
+    data = read_image_file(os.path.join(self.raw_folder, image_file))
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torchvision/datasets/mnist.py", line 509, in read_image_file
+    x = read_sn3_pascalvincent_tensor(path, strict=False)
+  File "/bigdata/users/20658133/Forward-Forward/FF/lib/python3.9/site-packages/torchvision/datasets/mnist.py", line 498, in read_sn3_pascalvincent_tensor
+    return torch.from_numpy(parsed.astype(m[2], copy=False)).view(*s)
+RuntimeError: Numpy is not available
+
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
