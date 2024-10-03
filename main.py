@@ -3,6 +3,7 @@ from collections import defaultdict
 
 import hydra
 import torch
+from tqdm import tqdm
 from omegaconf import DictConfig
 
 from src import utils
@@ -13,7 +14,7 @@ def train(opt, model, optimizer):
     train_loader = utils.get_data(opt, "train")
     num_steps_per_epoch = len(train_loader)
 
-    for epoch in range(opt.training.epochs):
+    for epoch in tqdm(range(opt.training.epochs)):
         train_results = defaultdict(float)
         optimizer = utils.update_learning_rate(optimizer, opt, epoch)
 
