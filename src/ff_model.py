@@ -143,7 +143,7 @@ class FF_model(torch.nn.Module):
                 if idx >= 1:
                     input_classification_model.append(z)
 
-        input_classification_model = torch.concat(input_classification_model, dim=-1)
+        input_classification_model = torch.cat(input_classification_model, dim=-1) # concat -> cat
 
         output = self.linear_classifier(input_classification_model.detach())
         output = output - torch.max(output, dim=-1, keepdim=True)[0]

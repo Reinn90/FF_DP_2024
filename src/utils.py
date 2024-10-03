@@ -66,7 +66,7 @@ def get_data(opt, partition):
         shuffle=True,
         worker_init_fn=seed_worker,
         generator=g,
-        num_workers=4,
+        num_workers=1, # changed from 4 to 1
         persistent_workers=True,
     )
 
