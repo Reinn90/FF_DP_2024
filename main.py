@@ -148,7 +148,7 @@ if __name__ == "__main__":
     pd.DataFrame(memory_log, columns=["Timestamp", "Value"]).to_csv("./Outputs/memory_log.csv", index=False)
     
     ## Saving FF and BP timestamps as CSV
-    model_timestamps = {"BP": [BP_start_time, BP_end_time], "FF": [FF_start_time, FF_end_time]}
+    model_timestamps = {"FF": [FF_start_time, FF_end_time]}
     pd.DataFrame(model_timestamps).to_csv("./Outputs/model_timestamps.csv", index = False)
 
     ## Function to print the power log
@@ -156,8 +156,6 @@ if __name__ == "__main__":
     plt.title('Power Draw Comparison')
     plt.xlabel('Time (sec)')
     plt.ylabel('Power')
-    plt.axvline(x=BP_start_time, color="r", linestyle="--", label="BP Start")
-    plt.axvline(x=BP_end_time, color="r", linestyle="--", label="BP End")
     plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
     plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
     plt.legend()
@@ -169,8 +167,6 @@ if __name__ == "__main__":
     plt.title('Memory Utilisation')
     plt.xlabel('Time (sec)')
     plt.ylabel('Memory Utilisation (%)')
-    plt.axvline(x=BP_start_time, color="r", linestyle="--", label="BP Start")
-    plt.axvline(x=BP_end_time, color="r", linestyle="--", label="BP End")
     plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
     plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
     plt.legend()
@@ -182,8 +178,6 @@ if __name__ == "__main__":
     plt.title('Memory Usage')
     plt.xlabel('Time (sec)')
     plt.ylabel('Memory Usage (MB)')
-    plt.axvline(x=BP_start_time, color="r", linestyle="--", label="BP Start")
-    plt.axvline(x=BP_end_time, color="r", linestyle="--", label="BP End")
     plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
     plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
     plt.legend()
