@@ -1,5 +1,8 @@
 import time
 from collections import defaultdict
+import queue
+import threading
+
 
 import hydra
 import torch
@@ -78,4 +81,32 @@ def my_main(opt: DictConfig) -> None:
 
 
 if __name__ == "__main__":
+    
+   
+    ## Define logging queues
+    power_log_queue = queue.Queue()
+    util_log_queue = queue.Queue()
+    memory_log_queue = queue.Queue()
+
+    ## Define stop event
+    stop_event = threading.Event()
+    event_start = time.time() # for plotting timestamps
+
+
+    ## Define logging threads
+    power_logging_thread = threading.Thread(
+        target=utils.log_gpu_power, args=(stop_event, power_log_queue)
+    )
+    util_logging_thread = threading.Thread(
+        target=utils.log_gpu_util, args=(stop_event, util_log_queue)
+    )
+    mem_logging_thread = threading.Thread(
+        target=utils.log_gpu_mem, args=(stop_event, memory_log_queue)
+    )
+
+    ## Start logging threads
+    power_logging_thread.start()
+    util_logging_thread.start()
+    mem_logging_thread.start()
+  
     my_main()
