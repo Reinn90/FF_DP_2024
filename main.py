@@ -3,7 +3,7 @@ from collections import defaultdict
 import queue
 import threading
 import pandas as pd
-
+import matplotlib.pyplot as plt
 
 import hydra
 import torch

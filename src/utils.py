@@ -11,6 +11,7 @@ from omegaconf import OmegaConf
 from src import ff_mnist, ff_model
 
 import gpustat
+import time
 
 def parse_args(opt):
     np.random.seed(opt.seed)
