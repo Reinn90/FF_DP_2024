@@ -8,7 +8,7 @@ import torchvision
 from hydra.utils import get_original_cwd
 from omegaconf import OmegaConf
 
-from src import ff_mnist, ff_model
+from src import ff_mnist, ff_model, ff_cifar10
 
 import gpustat
 import time
@@ -22,8 +22,8 @@ def parse_args(opt):
     return opt
 
 
-def get_model_and_optimizer(opt):
-    model = ff_model.FF_model(opt)
+def get_model_and_optimizer(opt, dataset):
+    model = ff_model.FF_model(opt, dataset)
     if "cuda" in opt.device:
         model = model.cuda()
     print(model, "\n")
@@ -54,9 +54,12 @@ def get_model_and_optimizer(opt):
     return model, optimizer
 
 
-def get_data(opt, partition):
-    dataset = ff_mnist.FF_MNIST(opt, partition)
-
+def get_data(opt, partition, mnist=True):
+    if mnist:
+        dataset = ff_mnist.FF_MNIST(opt, partition)
+    else:
+        dataset = ff_cifar10.FF_CIFAR10(opt, partition)
+        
     # Improve reproducibility in dataloader.
     g = torch.Generator()
     g.manual_seed(opt.seed)
@@ -68,8 +71,8 @@ def get_data(opt, partition):
         shuffle=True,
         worker_init_fn=seed_worker,
         generator=g,
-        num_workers=1, # changed from 4 to 1
-        persistent_workers=True,
+        # num_workers=1, # changed from 4 to 1
+        # persistent_workers=True,
     )
 
 
@@ -110,6 +113,38 @@ def get_MNIST_partition(opt, partition):
 
     return mnist
 
+def get_CIFAR10_partition(opt, partition):
+    if partition in ["train", "val", "train_val"]:
+        cifar10 = torchvision.datasets.CIFAR10(
+            os.path.join(get_original_cwd(), opt.input.path),
+            train=True,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+    elif partition in ["test"]:
+        cifar10 = torchvision.datasets.CIFAR10(
+            os.path.join(get_original_cwd(), opt.input.path),
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+    else:
+        raise NotImplementedError
+
+    if partition == "train":
+        cifar10 = torch.utils.data.Subset(cifar10, range(50000))
+    elif partition == "val":
+        cifar10 = torchvision.datasets.CIFAR10(
+            os.path.join(get_original_cwd(), opt.input.path),
+            train=True,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+        cifar10 = torch.utils.data.Subset(cifar10, range(50000, 60000))
+        
+    # print(f"Loaded {len(cifar10)} samples for {partition} partition") #dbug
+    
+    return cifar10
 
 def dict_to_cuda(dict):
     for key, value in dict.items():
@@ -153,13 +188,20 @@ def print_results(partition, iteration_time, scalar_outputs, epoch=None):
         print(f"Epoch {epoch} \t", end="")
 
     print(
-        f"{partition} \t \t"
-        f"Time: {timedelta(seconds=iteration_time)} \t",
+        f"{partition} \t"
+        f"Time: {timedelta(seconds=iteration_time)} \n",
         end="",
     )
     if scalar_outputs is not None:
-        for key, value in scalar_outputs.items():
-            print(f"{key}: {value:.4f} \t", end="")
+        scalar_items = list(scalar_outputs.items()) #
+
+        for i in range(0, len(scalar_items),2): #
+            key1, value1 = scalar_items[i]
+            if i+1 < len(scalar_items):
+                key2, value2 = scalar_items[i + 1]
+                print(f"{key1}: {value1:.4f}\t {key2}: {value2:.4f}")
+            else:
+                print(f"{key1}: {value1:.4f}")
     print()
 
 
