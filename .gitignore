@@ -1,3 +1,7 @@
+# Large files
+cifar-10-python.tar.gz
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -83,6 +87,7 @@ ipython_config.py
 
 # pyenv
 .python-version
+FF/bin/git-filter-repo
 
 # pipenv
 #   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
