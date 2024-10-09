@@ -1,5 +1,9 @@
 import time
 from collections import defaultdict
+import queue
+import threading
+import pandas as pd
+import matplotlib.pyplot as plt
 
 import hydra
 import torch
@@ -78,4 +82,107 @@ def my_main(opt: DictConfig) -> None:
 
 
 if __name__ == "__main__":
+    
+   
+    ## Define logging queues
+    power_log_queue = queue.Queue()
+    util_log_queue = queue.Queue()
+    memory_log_queue = queue.Queue()
+
+    ## Define stop event
+    stop_event = threading.Event()
+    event_start = time.time() # for plotting timestamps
+
+
+    ## Define logging threads
+    power_logging_thread = threading.Thread(
+        target=utils.log_gpu_power, args=(stop_event, power_log_queue)
+    )
+    util_logging_thread = threading.Thread(
+        target=utils.log_gpu_util, args=(stop_event, util_log_queue)
+    )
+    mem_logging_thread = threading.Thread(
+        target=utils.log_gpu_mem, args=(stop_event, memory_log_queue)
+    )
+
+    ## Start logging threads
+    power_logging_thread.start()
+    util_logging_thread.start()
+    mem_logging_thread.start()
+    
+    FF_start_time = time.time()
     my_main()
+    FF_end_time = time.time()
+    
+    stop_event.set()
+    mem_logging_thread.join()
+    util_logging_thread.join()
+    power_logging_thread.join()
+
+    ## Extracting logs
+    power_log = []
+    while not power_log_queue.empty():
+        power_log.append(power_log_queue.get())
+
+    util_log = []
+    while not util_log_queue.empty():
+        util_log.append(util_log_queue.get())
+
+    memory_log = []
+    while not memory_log_queue.empty():
+        memory_log.append(memory_log_queue.get())
+
+    ## Extracting timestamps
+    power_timestamps = [x[0] for x in power_log]
+    power_values = [x[1] for x in power_log]
+
+    util_timestamps = [x[0] for x in util_log]
+    util_values = [x[1] for x in util_log]
+
+    memory_timestamps = [x[0] for x in memory_log]
+    memory_values = [x[1] for x in memory_log] # convert to MB
+    
+    ## Saving log data as CSV
+    pd.DataFrame(power_log, columns=["Timestamp", "Value"]).to_csv("./Outputs/power_log.csv" , index = False)
+    pd.DataFrame(util_log, columns=["Timestamp", "Value"]).to_csv("./Outputs/util_log.csv", index=False)
+    pd.DataFrame(memory_log, columns=["Timestamp", "Value"]).to_csv("./Outputs/memory_log.csv", index=False)
+    
+    ## Saving FF and BP timestamps as CSV
+    model_timestamps = {"FF": [FF_start_time, FF_end_time]}
+    pd.DataFrame(model_timestamps).to_csv("./Outputs/model_timestamps.csv", index = False)
+
+    ## Function to print the power log
+    plt.plot(power_timestamps, power_values)
+    plt.title('Power Draw Comparison')
+    plt.xlabel('Time (sec)')
+    plt.ylabel('Power')
+    plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
+    plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
+    plt.legend()
+    plt.savefig("./Images/power_log.png")
+    plt.clf()
+
+    ## Function to print the utilization log
+    plt.plot(util_timestamps,util_values)
+    plt.title('Memory Utilisation')
+    plt.xlabel('Time (sec)')
+    plt.ylabel('Memory Utilisation (%)')
+    plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
+    plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
+    plt.legend()
+    plt.savefig("./Images/util_log.png")
+    plt.clf()
+    
+    ## Function to print the memory log
+    plt.plot(memory_timestamps, memory_values)
+    plt.title('Memory Usage')
+    plt.xlabel('Time (sec)')
+    plt.ylabel('Memory Usage (MB)')
+    plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
+    plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
+    plt.legend()
+    plt.savefig("./Images/memory_log.png")
+    plt.clf()
+
+
+

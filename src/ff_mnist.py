@@ -58,3 +58,5 @@ class FF_MNIST(torch.utils.data.Dataset):
         neg_sample = self._get_neg_sample(sample, class_label)
         neutral_sample = self._get_neutral_sample(sample)
         return pos_sample, neg_sample, neutral_sample, class_label
+
+np.random.choice

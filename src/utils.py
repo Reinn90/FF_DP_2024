@@ -10,6 +10,8 @@ from omegaconf import OmegaConf
 
 from src import ff_mnist, ff_model
 
+import gpustat
+import time
 
 def parse_args(opt):
     np.random.seed(opt.seed)
@@ -168,3 +170,32 @@ def log_results(result_dict, scalar_outputs, num_steps):
         else:
             result_dict[key] += value.item() / num_steps
     return result_dict
+
+def getGPUStats():
+    GPUs = gpustat.new_query()
+    GPU = GPUs[0]
+    return GPU
+
+
+def log_gpu_power(stop_event, log_queue):
+    while not stop_event.is_set():
+        value = getGPUStats().power_draw
+        timestamp = time.time()
+        log_queue.put((timestamp, value))
+        # time.sleep(1)
+
+
+def log_gpu_util(stop_event, log_queue):
+    while not stop_event.is_set():
+        value = getGPUStats().utilization
+        timestamp = time.time()
+        log_queue.put((timestamp, value))
+        # time.sleep(1)
+
+
+def log_gpu_mem(stop_event, log_queue):
+    while not stop_event.is_set():
+        value = getGPUStats().memory_used
+        timestamp = time.time()
+        log_queue.put((timestamp, value))
+        # time.sleep(1)
