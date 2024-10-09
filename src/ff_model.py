@@ -9,15 +9,20 @@ from src import utils
 class FF_model(torch.nn.Module):
     """The model trained with Forward-Forward (FF)."""
 
-    def __init__(self, opt):
+    def __init__(self, opt, dataset="mnist"):
         super(FF_model, self).__init__()
 
+        dataset_size = {
+            "mnist": 784,
+            "cifar10": 3072
+        }
+        self.data = dataset_size.get(dataset,784) # defaults to mnist
         self.opt = opt
         self.num_channels = [self.opt.model.hidden_dim] * self.opt.model.num_layers
         self.act_fn = ReLU_full_grad()
 
         # Initialize the model.
-        self.model = nn.ModuleList([nn.Linear(784, self.num_channels[0])])
+        self.model = nn.ModuleList([nn.Linear(self.data, self.num_channels[0])])
         for i in range(1, len(self.num_channels)):
             self.model.append(nn.Linear(self.num_channels[i - 1], self.num_channels[i]))
 

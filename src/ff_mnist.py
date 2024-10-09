@@ -52,6 +52,11 @@ class FF_MNIST(torch.utils.data.Dataset):
         return z
 
     def _generate_sample(self, index):
+        
+        # print(len(self.mnist))
+        # if index <= len(self.mnist):
+        #     print(index)
+        
         # Get MNIST sample.
         sample, class_label = self.mnist[index]
         pos_sample = self._get_pos_sample(sample, class_label)
