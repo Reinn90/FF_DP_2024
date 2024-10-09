@@ -21,5 +21,7 @@ echo "venv activated"
 
 python3.9 main.py
 
+python3.9 analysis.py
+
 echo "job complete"
 
