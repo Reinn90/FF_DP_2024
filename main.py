@@ -75,6 +75,7 @@ def validate_or_test(opt, model, partition, mnist=True, epoch=None):
 
 @hydra.main(config_path=".", config_name="config", version_base=None)
 def my_main(opt: DictConfig) -> None:
+    
     # True = mnist, False = cifar10
     mnist_T_cifar_F = True
     
@@ -101,8 +102,6 @@ if __name__ == "__main__":
 
     ## Define stop event
     stop_event = threading.Event()
-    event_start = time.time() # for plotting timestamps
-
 
     ## Define logging threads
     power_logging_thread = threading.Thread(
@@ -119,12 +118,14 @@ if __name__ == "__main__":
     power_logging_thread.start()
     util_logging_thread.start()
     mem_logging_thread.start()
-    
+
+    ##### RUN FF algorithm #####
     FF_start_time = time.time()
     my_main()
     FF_end_time = time.time()
     
     stop_event.set()
+    
     mem_logging_thread.join()
     util_logging_thread.join()
     power_logging_thread.join()
@@ -164,7 +165,7 @@ if __name__ == "__main__":
     ## Function to print the power log
     plt.plot(power_timestamps, power_values)
     plt.title('Power Draw Comparison')
-    plt.xlabel('Time (sec)')
+    plt.xlabel('Timestamp (UTC)')
     plt.ylabel('Power')
     plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
     plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
@@ -175,7 +176,7 @@ if __name__ == "__main__":
     ## Function to print the utilization log
     plt.plot(util_timestamps,util_values)
     plt.title('Memory Utilisation')
-    plt.xlabel('Time (sec)')
+    plt.xlabel('Timestamp (UTC)')
     plt.ylabel('Memory Utilisation (%)')
     plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
     plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
@@ -186,7 +187,7 @@ if __name__ == "__main__":
     ## Function to print the memory log
     plt.plot(memory_timestamps, memory_values)
     plt.title('Memory Usage')
-    plt.xlabel('Time (sec)')
+    plt.xlabel('Timestamp (UTC)')
     plt.ylabel('Memory Usage (MB)')
     plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
     plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
