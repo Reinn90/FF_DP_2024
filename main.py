@@ -169,7 +169,7 @@ if __name__ == "__main__":
     plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
     plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
     plt.legend()
-    plt.savefig("./Images/power_log.png")
+    plt.savefig("./images/power_log.png")
     plt.clf()
 
     ## Function to print the utilization log
@@ -180,7 +180,7 @@ if __name__ == "__main__":
     plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
     plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
     plt.legend()
-    plt.savefig("./Images/util_log.png")
+    plt.savefig("./images/util_log.png")
     plt.clf()
     
     ## Function to print the memory log
@@ -191,7 +191,7 @@ if __name__ == "__main__":
     plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
     plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
     plt.legend()
-    plt.savefig("./Images/memory_log.png")
+    plt.savefig("./images/memory_log.png")
     plt.clf()
 
 
