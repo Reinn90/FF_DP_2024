@@ -10,7 +10,7 @@ import torch
 from tqdm import tqdm
 from omegaconf import DictConfig
 
-from src import utils
+from src import utils, loss_tracker
 
 
 def train(opt, model, optimizer, mnist=True):
@@ -20,6 +20,8 @@ def train(opt, model, optimizer, mnist=True):
     start_time = time.time()
     train_loader = utils.get_data(opt, "train", mnist)
     num_steps_per_epoch = len(train_loader)
+
+    loss_track = loss_tracker.LossTracker(opt.model.num_layers)
 
     for epoch in tqdm(range(opt.training.epochs)):
         train_results = defaultdict(float)
@@ -39,12 +41,19 @@ def train(opt, model, optimizer, mnist=True):
                 train_results, scalar_outputs, num_steps_per_epoch
             )
 
+        
+        # Record loss 
+        loss_track.update(train_results, epoch)
+
         utils.print_results("train", time.time() - start_time, train_results, epoch)
         start_time = time.time()
 
         # Validate.
         if epoch % opt.training.val_idx == 0 and opt.training.val_idx != -1:
             validate_or_test(opt, model, "val", mnist, epoch=epoch)
+
+    # Save loss plot at end of training
+    loss_track.plot()
 
     return model
 
