@@ -4,13 +4,16 @@ import queue
 import threading
 import pandas as pd
 import matplotlib.pyplot as plt
+import gc
 
 import hydra
 import torch
+import torch.nn as nn
+from torch.optim.adam import Adam
 from tqdm import tqdm
 from omegaconf import DictConfig
 
-from src import utils, loss_tracker
+from src import utils, loss_tracker, bp_model
 
 
 def train(opt, model, optimizer, mnist=True):
@@ -83,7 +86,7 @@ def validate_or_test(opt, model, partition, mnist=True, epoch=None):
 
 
 @hydra.main(config_path=".", config_name="config", version_base=None)
-def my_main(opt: DictConfig) -> None:
+def ff_main(opt: DictConfig) -> None:
     
     # True = mnist, False = cifar10
     mnist_T_cifar_F = True
@@ -98,7 +101,79 @@ def my_main(opt: DictConfig) -> None:
         validate_or_test(opt, model, "test", mnist_T_cifar_F) 
 
     model_total_time = time.time() - model_start_time
-    print(f"FF training time: {model_total_time//60}min {model_total_time%60:.2f}sec")
+    # print(f"FF training time: {model_total_time//60}min {model_total_time%60:.2f}sec")
+
+@hydra.main(config_path=".", config_name="config", version_base=None)
+def bp_main(opt: DictConfig) -> None:
+    print(f'BP START')
+    device = opt.device
+
+    print(f'Using {device}')
+    
+    torch.manual_seed(opt.seed)
+    train_loader, val_loader, test_loader = utils.MNIST_loaders(
+        train_batch_size=opt.input.batch_size, 
+        test_batch_size=opt.input.batch_size
+    )
+
+    dims = [784, 1000, 1000, 1000]
+    num_classes = 10
+
+    bp_net = bp_model.BPNet(dims, device, num_classes)
+    bp_net.to(device)
+
+    loss_fn = nn.CrossEntropyLoss().to(device)
+    optim = torch.optim.Adam(bp_net.parameters(), lr=opt.training.learning_rate)
+    epochs = opt.training.epochs
+
+    train_losses = []
+    val_losses = []
+    val_accs = []
+    epoch_timestamps = []
+
+    for epoch in tqdm(range(1,epochs+1)):
+        bp_start_time = time.time()
+        train_loss = utils.train(bp_net, device, train_loader, optim, loss_fn, epoch)
+        val_loss, val_accuracy = utils.evaluate(bp_net, device, val_loader, loss_fn, True)
+        test_loss, test_accuracy = utils.evaluate(bp_net, device, test_loader, loss_fn)
+        
+        train_losses.append(train_loss)
+        val_losses.append(val_loss)
+        val_accs.append(val_accuracy)
+        print(f'Time: {time.time() - bp_start_time}')
+        print()
+        epoch_timestamps.append((epoch, time.time() - bp_start_time))
+        
+
+    # plot BP training time per epoch
+    ep , t = zip(*epoch_timestamps)
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(ep,t)
+    plt.title('BP Training time per Epoch')
+    plt.xlabel('Epoch')
+    # plt.ylim(ymin=0)
+    plt.ylabel('Runtime')
+    plt.savefig('./images/bp_tpe.png')
+    plt.close()
+
+    # plot BP loss curves
+    plt.figure(figsize=(10, 6))
+    plt.plot(train_losses, label='Training Loss')
+    plt.plot(val_losses, label='Validation Loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title(f'Backpropagation Training and Validation Loss Curves')
+    plt.legend()
+    plt.savefig(f'./images/bp_loss_curves.png')
+    plt.close()
+
+    # Clear and delete model from cuda
+    del bp_net
+    del optim
+    del loss_fn
+    torch.cuda.empty_cache()
+    gc.collect() # free up memory
 
 
 if __name__ == "__main__":
@@ -128,9 +203,20 @@ if __name__ == "__main__":
     util_logging_thread.start()
     mem_logging_thread.start()
 
+
+    ##### RUN BP #####
+    BP_start_time = time.time()
+    bp_main()
+    BP_end_time = time.time()
+
+    
+    time.sleep(120)
+
+    print()
+
     ##### RUN FF algorithm #####
     FF_start_time = time.time()
-    my_main()
+    ff_main()
     FF_end_time = time.time()
     
     stop_event.set()
@@ -168,25 +254,30 @@ if __name__ == "__main__":
     pd.DataFrame(memory_log, columns=["Timestamp", "Value"]).to_csv("./Outputs/memory_log.csv", index=False)
     
     ## Saving FF and BP timestamps as CSV
-    model_timestamps = {"FF": [FF_start_time, FF_end_time]}
+    model_timestamps = {"BP": [BP_start_time, BP_end_time],
+                        "FF": [FF_start_time, FF_end_time]}
     pd.DataFrame(model_timestamps).to_csv("./Outputs/model_timestamps.csv", index = False)
 
     ## Function to print the power log
-    plt.plot(power_timestamps, power_values)
-    plt.title('Power Draw Comparison')
-    plt.xlabel('Timestamp (UTC)')
-    plt.ylabel('Power')
-    plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
-    plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
-    plt.legend()
-    plt.savefig("./images/power_log.png")
-    plt.clf()
+    # plt.plot(power_timestamps, power_values)
+    # plt.title('Power Draw Comparison')
+    # plt.xlabel('Timestamp (UTC)')
+    # plt.ylabel('Power')
+    # plt.axvline(x=BP_start_time, color="r", linestyle="--", label="BP Start")
+    # plt.axvline(x=BP_end_time, color="r", linestyle="--", label="BP End")
+    # plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
+    # plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
+    # plt.legend()
+    # plt.savefig("./images/power_log.png")
+    # plt.clf()
 
     ## Function to print the utilization log
     plt.plot(util_timestamps,util_values)
     plt.title('Memory Utilisation')
     plt.xlabel('Timestamp (UTC)')
     plt.ylabel('Memory Utilisation (%)')
+    plt.axvline(x=BP_start_time, color="r", linestyle="--", label="BP Start")
+    plt.axvline(x=BP_end_time, color="r", linestyle="--", label="BP End")
     plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
     plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
     plt.legend()
@@ -198,6 +289,8 @@ if __name__ == "__main__":
     plt.title('Memory Usage')
     plt.xlabel('Timestamp (UTC)')
     plt.ylabel('Memory Usage (MB)')
+    plt.axvline(x=BP_start_time, color="r", linestyle="--", label="BP Start")
+    plt.axvline(x=BP_end_time, color="r", linestyle="--", label="BP End")
     plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
     plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
     plt.legend()

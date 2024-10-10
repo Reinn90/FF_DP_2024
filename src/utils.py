@@ -5,6 +5,10 @@ from datetime import timedelta
 import numpy as np
 import torch
 import torchvision
+from torchvision.datasets import MNIST, CIFAR10, CIFAR100
+from torchvision.transforms import Compose, ToTensor, Normalize, Lambda
+from torch.utils.data import DataLoader, random_split
+
 from hydra.utils import get_original_cwd
 from omegaconf import OmegaConf
 
@@ -212,6 +216,81 @@ def log_results(result_dict, scalar_outputs, num_steps):
         else:
             result_dict[key] += value.item() / num_steps
     return result_dict
+
+
+def MNIST_loaders(train_batch_size=100, test_batch_size=100, val_split=0.2):
+    transform = Compose([
+        ToTensor(),
+        Normalize((0.1307,), (0.3081,)),
+        Lambda(lambda x: torch.flatten(x))])
+
+    full_dataset = MNIST('../datasets/', train=True, download=True, transform=transform)
+    
+    # Split the training set into train and validation
+    val_size = int(len(full_dataset) * val_split)
+    
+    train_size = len(full_dataset) - val_size
+    train_dataset, val_dataset = random_split(full_dataset, [train_size, val_size])
+    train_loader = DataLoader(train_dataset, batch_size=train_batch_size, shuffle=True)
+    
+    val_loader = DataLoader(val_dataset, batch_size=train_batch_size, shuffle=False)
+    
+    test_loader = DataLoader(
+
+        MNIST("../datasets/", train=False, download=True, transform=transform),
+        batch_size=test_batch_size,
+        shuffle=False,
+    )
+
+
+    return train_loader, val_loader, test_loader
+
+
+# Train network with backpropogation
+def train(model, device, train_loader, optimizer, loss_fn, epoch):
+    model.train()
+    total_loss = 0
+    for batch_idx, (data, target) in enumerate(train_loader):
+        data, target = data.to(device), target.to(device)
+        optimizer.zero_grad()
+        output = model(data)
+        loss = loss_fn(output, target)
+        loss.backward()
+        optimizer.step()
+
+        total_loss += loss.item()
+        if batch_idx % 100 == 0:
+            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+                epoch, len(data)*batch_idx, len(train_loader.dataset),
+                100. * batch_idx / len(train_loader), loss.item()))
+    return total_loss / len(train_loader)
+
+
+# Test network for backpropogation; get avg. loss
+def evaluate(model, device, data_loader, loss_fn, val=False):
+    model.eval()
+    total_loss = 0
+    correct = 0
+    with torch.no_grad():
+        for data, target in data_loader:
+            data, target = data.to(device), target.to(device)
+            output = model(data)
+
+            total_loss += loss_fn(output, target).item() * data.size(0) # sum batch loss
+            pred = output.argmax(dim=1, keepdim=True)
+
+            correct += pred.eq(target.view_as(pred)).sum().item()
+
+    avg_loss = total_loss / len(data_loader.dataset)
+    accuracy = correct / len(data_loader.dataset)
+
+    t = 'Val' if val else 'Test'
+    
+    print('{} Average loss: {:.4f}, Accuracy: {}/{} ({:.2f}%)'.format(t,
+        avg_loss, correct, len(data_loader.dataset), accuracy*100.0))
+    
+    return avg_loss, accuracy
+
 
 def getGPUStats():
     GPUs = gpustat.new_query()
