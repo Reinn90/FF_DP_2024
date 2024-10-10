@@ -17,7 +17,7 @@
 echo "Job Starting..."
 
 source FF/bin/activate
-echo "venv activated"
+# echo "venv activated"
 
 python3.9 main.py
 

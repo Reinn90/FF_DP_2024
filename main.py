@@ -203,14 +203,12 @@ if __name__ == "__main__":
     util_logging_thread.start()
     mem_logging_thread.start()
 
-
     ##### RUN BP #####
     BP_start_time = time.time()
     bp_main()
     BP_end_time = time.time()
 
-    
-    time.sleep(120)
+    time.sleep(10)
 
     print()
 
@@ -218,6 +216,7 @@ if __name__ == "__main__":
     FF_start_time = time.time()
     ff_main()
     FF_end_time = time.time()
+ 
     
     stop_event.set()
     
@@ -257,45 +256,6 @@ if __name__ == "__main__":
     model_timestamps = {"BP": [BP_start_time, BP_end_time],
                         "FF": [FF_start_time, FF_end_time]}
     pd.DataFrame(model_timestamps).to_csv("./Outputs/model_timestamps.csv", index = False)
-
-    ## Function to print the power log
-    # plt.plot(power_timestamps, power_values)
-    # plt.title('Power Draw Comparison')
-    # plt.xlabel('Timestamp (UTC)')
-    # plt.ylabel('Power')
-    # plt.axvline(x=BP_start_time, color="r", linestyle="--", label="BP Start")
-    # plt.axvline(x=BP_end_time, color="r", linestyle="--", label="BP End")
-    # plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
-    # plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
-    # plt.legend()
-    # plt.savefig("./images/power_log.png")
-    # plt.clf()
-
-    ## Function to print the utilization log
-    plt.plot(util_timestamps,util_values)
-    plt.title('Memory Utilisation')
-    plt.xlabel('Timestamp (UTC)')
-    plt.ylabel('Memory Utilisation (%)')
-    plt.axvline(x=BP_start_time, color="r", linestyle="--", label="BP Start")
-    plt.axvline(x=BP_end_time, color="r", linestyle="--", label="BP End")
-    plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
-    plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
-    plt.legend()
-    plt.savefig("./images/util_log.png")
-    plt.clf()
-    
-    ## Function to print the memory log
-    plt.plot(memory_timestamps, memory_values)
-    plt.title('Memory Usage')
-    plt.xlabel('Timestamp (UTC)')
-    plt.ylabel('Memory Usage (MB)')
-    plt.axvline(x=BP_start_time, color="r", linestyle="--", label="BP Start")
-    plt.axvline(x=BP_end_time, color="r", linestyle="--", label="BP End")
-    plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
-    plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
-    plt.legend()
-    plt.savefig("./images/memory_log.png")
-    plt.clf()
 
 
 
