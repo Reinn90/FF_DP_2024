@@ -303,7 +303,7 @@ def log_gpu_power(stop_event, log_queue):
         value = getGPUStats().power_draw
         timestamp = time.time()
         log_queue.put((timestamp, value))
-        # time.sleep(1)
+        #time.sleep(0.1)
 
 
 def log_gpu_util(stop_event, log_queue):
@@ -311,7 +311,7 @@ def log_gpu_util(stop_event, log_queue):
         value = getGPUStats().utilization
         timestamp = time.time()
         log_queue.put((timestamp, value))
-        # time.sleep(1)
+        #time.sleep(0.1)
 
 
 def log_gpu_mem(stop_event, log_queue):
@@ -319,4 +319,4 @@ def log_gpu_mem(stop_event, log_queue):
         value = getGPUStats().memory_used
         timestamp = time.time()
         log_queue.put((timestamp, value))
-        # time.sleep(1)
+        #time.sleep(0.1)

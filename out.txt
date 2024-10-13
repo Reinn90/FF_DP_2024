@@ -1,0 +1,484 @@
+BP START
+Using cuda
+  0%|                                                                                           | 0/20 [00:00<?, ?it/s]Train Epoch: 1 [0/48000 (0%)]    Loss: 2.301901
+Train Epoch: 1 [10000/48000 (21%)]      Loss: 1.564582
+Train Epoch: 1 [20000/48000 (42%)]      Loss: 1.587553
+Train Epoch: 1 [30000/48000 (62%)]      Loss: 1.586344
+Train Epoch: 1 [40000/48000 (83%)]      Loss: 1.529353
+Val Average loss: 1.5335, Accuracy: 11141/12000 (92.84%)
+Test Average loss: 1.5280, Accuracy: 9329/10000 (93.29%)
+Memory usage: [1153]
+Power usage: [37]
+Utilization: [4]
+Time: 9.190545797348022
+
+  5%|████▏                                                                              | 1/20 [00:09<02:54,  9.19s/it]Train Epoch: 2 [0/48000 (0%)]    Loss: 1.533931
+Train Epoch: 2 [10000/48000 (21%)]      Loss: 1.506345
+Train Epoch: 2 [20000/48000 (42%)]      Loss: 1.543490
+Train Epoch: 2 [30000/48000 (62%)]      Loss: 1.517859
+Train Epoch: 2 [40000/48000 (83%)]      Loss: 1.542392
+Val Average loss: 1.5137, Accuracy: 11375/12000 (94.79%)
+Test Average loss: 1.5098, Accuracy: 9515/10000 (95.15%)
+Memory usage: [1153, 1154]
+Power usage: [37, 15]
+Utilization: [4, 9]
+Time: 12.275933027267456
+
+ 10%|████████▎                                                                          | 2/20 [00:21<03:18, 11.01s/it]Train Epoch: 3 [0/48000 (0%)]    Loss: 1.484120
+Train Epoch: 3 [10000/48000 (21%)]      Loss: 1.497065
+Train Epoch: 3 [20000/48000 (42%)]      Loss: 1.484333
+Train Epoch: 3 [30000/48000 (62%)]      Loss: 1.568871
+Train Epoch: 3 [40000/48000 (83%)]      Loss: 1.515152
+Val Average loss: 1.5086, Accuracy: 11437/12000 (95.31%)
+Test Average loss: 1.5039, Accuracy: 9569/10000 (95.69%)
+Memory usage: [1153, 1154, 1154]
+Power usage: [37, 15, 45]
+Utilization: [4, 9, 4]
+Time: 9.161172866821289
+
+ 15%|████████████▍                                                                      | 3/20 [00:30<02:52, 10.16s/it]Train Epoch: 4 [0/48000 (0%)]    Loss: 1.481413
+Train Epoch: 4 [10000/48000 (21%)]      Loss: 1.491990
+Train Epoch: 4 [20000/48000 (42%)]      Loss: 1.537805
+Train Epoch: 4 [30000/48000 (62%)]      Loss: 1.521879
+Train Epoch: 4 [40000/48000 (83%)]      Loss: 1.481006
+Val Average loss: 1.5206, Accuracy: 11287/12000 (94.06%)
+Test Average loss: 1.5186, Accuracy: 9424/10000 (94.24%)
+Memory usage: [1153, 1154, 1154, 1154]
+Power usage: [37, 15, 45, 46]
+Utilization: [4, 9, 4, 4]
+Time: 9.010401248931885
+
+ 20%|████████████████▌                                                                  | 4/20 [00:39<02:35,  9.71s/it]Train Epoch: 5 [0/48000 (0%)]    Loss: 1.502656
+Train Epoch: 5 [10000/48000 (21%)]      Loss: 1.535929
+Train Epoch: 5 [20000/48000 (42%)]      Loss: 1.472008
+Train Epoch: 5 [30000/48000 (62%)]      Loss: 1.500316
+Train Epoch: 5 [40000/48000 (83%)]      Loss: 1.503654
+Val Average loss: 1.5135, Accuracy: 11369/12000 (94.74%)
+Test Average loss: 1.5077, Accuracy: 9531/10000 (95.31%)
+Memory usage: [1153, 1154, 1154, 1154, 1154]
+Power usage: [37, 15, 45, 46, 45]
+Utilization: [4, 9, 4, 4, 4]
+Time: 9.07353687286377
+
+ 25%|████████████████████▊                                                              | 5/20 [00:48<02:22,  9.48s/it]Train Epoch: 6 [0/48000 (0%)]    Loss: 1.496484
+Train Epoch: 6 [10000/48000 (21%)]      Loss: 1.494879
+Train Epoch: 6 [20000/48000 (42%)]      Loss: 1.519421
+Train Epoch: 6 [30000/48000 (62%)]      Loss: 1.514081
+Train Epoch: 6 [40000/48000 (83%)]      Loss: 1.481973
+Val Average loss: 1.5023, Accuracy: 11506/12000 (95.88%)
+Test Average loss: 1.4979, Accuracy: 9630/10000 (96.30%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154]
+Power usage: [37, 15, 45, 46, 45, 45]
+Utilization: [4, 9, 4, 4, 4, 4]
+Time: 8.990204334259033
+
+ 30%|████████████████████████▉                                                          | 6/20 [00:57<02:10,  9.31s/it]Train Epoch: 7 [0/48000 (0%)]    Loss: 1.514203
+Train Epoch: 7 [10000/48000 (21%)]      Loss: 1.473935
+Train Epoch: 7 [20000/48000 (42%)]      Loss: 1.494423
+Train Epoch: 7 [30000/48000 (62%)]      Loss: 1.511496
+Train Epoch: 7 [40000/48000 (83%)]      Loss: 1.472456
+Val Average loss: 1.5071, Accuracy: 11452/12000 (95.43%)
+Test Average loss: 1.5038, Accuracy: 9574/10000 (95.74%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154, 1171]
+Power usage: [37, 15, 45, 46, 45, 45, 45]
+Utilization: [4, 9, 4, 4, 4, 4, 3]
+Time: 9.044566631317139
+
+ 35%|█████████████████████████████                                                      | 7/20 [01:06<01:59,  9.23s/it]Train Epoch: 8 [0/48000 (0%)]    Loss: 1.461230
+Train Epoch: 8 [10000/48000 (21%)]      Loss: 1.518280
+Train Epoch: 8 [20000/48000 (42%)]      Loss: 1.478888
+Train Epoch: 8 [30000/48000 (62%)]      Loss: 1.498373
+Train Epoch: 8 [40000/48000 (83%)]      Loss: 1.522545
+Val Average loss: 1.5002, Accuracy: 11531/12000 (96.09%)
+Test Average loss: 1.4966, Accuracy: 9640/10000 (96.40%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154, 1171, 1164]
+Power usage: [37, 15, 45, 46, 45, 45, 45, 18]
+Utilization: [4, 9, 4, 4, 4, 4, 3, 9]
+Time: 12.102575302124023
+
+ 40%|█████████████████████████████████▏                                                 | 8/20 [01:18<02:01, 10.14s/it]Train Epoch: 9 [0/48000 (0%)]    Loss: 1.471305
+Train Epoch: 9 [10000/48000 (21%)]      Loss: 1.491283
+Train Epoch: 9 [20000/48000 (42%)]      Loss: 1.490686
+Train Epoch: 9 [30000/48000 (62%)]      Loss: 1.471192
+Train Epoch: 9 [40000/48000 (83%)]      Loss: 1.496823
+Val Average loss: 1.4998, Accuracy: 11536/12000 (96.13%)
+Test Average loss: 1.4938, Accuracy: 9671/10000 (96.71%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154, 1171, 1164, 1157]
+Power usage: [37, 15, 45, 46, 45, 45, 45, 18, 18]
+Utilization: [4, 9, 4, 4, 4, 4, 3, 9, 8]
+Time: 12.350552320480347
+
+ 45%|█████████████████████████████████████▎                                             | 9/20 [01:31<01:59, 10.83s/it]Train Epoch: 10 [0/48000 (0%)]   Loss: 1.465842
+Train Epoch: 10 [10000/48000 (21%)]     Loss: 1.469958
+Train Epoch: 10 [20000/48000 (42%)]     Loss: 1.488945
+Train Epoch: 10 [30000/48000 (62%)]     Loss: 1.481645
+Train Epoch: 10 [40000/48000 (83%)]     Loss: 1.462581
+Val Average loss: 1.5063, Accuracy: 11456/12000 (95.47%)
+Test Average loss: 1.5046, Accuracy: 9566/10000 (95.66%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154, 1171, 1164, 1157, 1157]
+Power usage: [37, 15, 45, 46, 45, 45, 45, 18, 18, 17]
+Utilization: [4, 9, 4, 4, 4, 4, 3, 9, 8, 9]
+Time: 12.47701621055603
+
+ 50%|█████████████████████████████████████████                                         | 10/20 [01:43<01:53, 11.34s/it]Train Epoch: 11 [0/48000 (0%)]   Loss: 1.478270
+Train Epoch: 11 [10000/48000 (21%)]     Loss: 1.488880
+Train Epoch: 11 [20000/48000 (42%)]     Loss: 1.500621
+Train Epoch: 11 [30000/48000 (62%)]     Loss: 1.471206
+Train Epoch: 11 [40000/48000 (83%)]     Loss: 1.501217
+Val Average loss: 1.5003, Accuracy: 11532/12000 (96.10%)
+Test Average loss: 1.4992, Accuracy: 9619/10000 (96.19%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154, 1171, 1164, 1157, 1157, 1158]
+Power usage: [37, 15, 45, 46, 45, 45, 45, 18, 18, 17, 17]
+Utilization: [4, 9, 4, 4, 4, 4, 3, 9, 8, 9, 8]
+Time: 12.397934436798096
+
+ 55%|█████████████████████████████████████████████                                     | 11/20 [01:56<01:44, 11.66s/it]Train Epoch: 12 [0/48000 (0%)]   Loss: 1.481053
+Train Epoch: 12 [10000/48000 (21%)]     Loss: 1.481020
+Train Epoch: 12 [20000/48000 (42%)]     Loss: 1.465060
+Train Epoch: 12 [30000/48000 (62%)]     Loss: 1.510254
+Train Epoch: 12 [40000/48000 (83%)]     Loss: 1.501145
+Val Average loss: 1.4959, Accuracy: 11584/12000 (96.53%)
+Test Average loss: 1.4942, Accuracy: 9669/10000 (96.69%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154, 1171, 1164, 1157, 1157, 1158, 1158]
+Power usage: [37, 15, 45, 46, 45, 45, 45, 18, 18, 17, 17, 18]
+Utilization: [4, 9, 4, 4, 4, 4, 3, 9, 8, 9, 8, 8]
+Time: 12.496367454528809
+
+ 60%|█████████████████████████████████████████████████▏                                | 12/20 [02:08<01:35, 11.92s/it]Train Epoch: 13 [0/48000 (0%)]   Loss: 1.481160
+Train Epoch: 13 [10000/48000 (21%)]     Loss: 1.461344
+Train Epoch: 13 [20000/48000 (42%)]     Loss: 1.478277
+Train Epoch: 13 [30000/48000 (62%)]     Loss: 1.491170
+Train Epoch: 13 [40000/48000 (83%)]     Loss: 1.471311
+Val Average loss: 1.4984, Accuracy: 11552/12000 (96.27%)
+Test Average loss: 1.4947, Accuracy: 9662/10000 (96.62%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154, 1171, 1164, 1157, 1157, 1158, 1158, 1154]
+Power usage: [37, 15, 45, 46, 45, 45, 45, 18, 18, 17, 17, 18, 17]
+Utilization: [4, 9, 4, 4, 4, 4, 3, 9, 8, 9, 8, 8, 9]
+Time: 12.466223001480103
+
+ 65%|█████████████████████████████████████████████████████▎                            | 13/20 [02:21<01:24, 12.08s/it]Train Epoch: 14 [0/48000 (0%)]   Loss: 1.490329
+Train Epoch: 14 [10000/48000 (21%)]     Loss: 1.480084
+Train Epoch: 14 [20000/48000 (42%)]     Loss: 1.479779
+Train Epoch: 14 [30000/48000 (62%)]     Loss: 1.490291
+Train Epoch: 14 [40000/48000 (83%)]     Loss: 1.478703
+Val Average loss: 1.5146, Accuracy: 11352/12000 (94.60%)
+Test Average loss: 1.5095, Accuracy: 9517/10000 (95.17%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154, 1171, 1164, 1157, 1157, 1158, 1158, 1154, 1154]
+Power usage: [37, 15, 45, 46, 45, 45, 45, 18, 18, 17, 17, 18, 17, 17]
+Utilization: [4, 9, 4, 4, 4, 4, 3, 9, 8, 9, 8, 8, 9, 9]
+Time: 12.394943237304688
+
+ 70%|█████████████████████████████████████████████████████████▍                        | 14/20 [02:33<01:13, 12.18s/it]Train Epoch: 15 [0/48000 (0%)]   Loss: 1.525916
+Train Epoch: 15 [10000/48000 (21%)]     Loss: 1.481153
+Train Epoch: 15 [20000/48000 (42%)]     Loss: 1.501151
+Train Epoch: 15 [30000/48000 (62%)]     Loss: 1.510837
+Train Epoch: 15 [40000/48000 (83%)]     Loss: 1.483345
+Val Average loss: 1.4978, Accuracy: 11553/12000 (96.28%)
+Test Average loss: 1.4939, Accuracy: 9672/10000 (96.72%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154, 1171, 1164, 1157, 1157, 1158, 1158, 1154, 1154, 1154]
+Power usage: [37, 15, 45, 46, 45, 45, 45, 18, 18, 17, 17, 18, 17, 17, 17]
+Utilization: [4, 9, 4, 4, 4, 4, 3, 9, 8, 9, 8, 8, 9, 9, 8]
+Time: 12.359453678131104
+
+ 75%|█████████████████████████████████████████████████████████████▌                    | 15/20 [02:45<01:01, 12.23s/it]Train Epoch: 16 [0/48000 (0%)]   Loss: 1.480233
+Train Epoch: 16 [10000/48000 (21%)]     Loss: 1.491487
+Train Epoch: 16 [20000/48000 (42%)]     Loss: 1.477642
+Train Epoch: 16 [30000/48000 (62%)]     Loss: 1.471140
+Train Epoch: 16 [40000/48000 (83%)]     Loss: 1.510810
+Val Average loss: 1.4987, Accuracy: 11550/12000 (96.25%)
+Test Average loss: 1.4951, Accuracy: 9662/10000 (96.62%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154, 1171, 1164, 1157, 1157, 1158, 1158, 1154, 1154, 1154, 1154]
+Power usage: [37, 15, 45, 46, 45, 45, 45, 18, 18, 17, 17, 18, 17, 17, 17, 14]
+Utilization: [4, 9, 4, 4, 4, 4, 3, 9, 8, 9, 8, 8, 9, 9, 8, 9]
+Time: 12.43819785118103
+
+ 80%|█████████████████████████████████████████████████████████████████▌                | 16/20 [02:58<00:49, 12.30s/it]Train Epoch: 17 [0/48000 (0%)]   Loss: 1.493522
+Train Epoch: 17 [10000/48000 (21%)]     Loss: 1.484812
+Train Epoch: 17 [20000/48000 (42%)]     Loss: 1.501296
+Train Epoch: 17 [30000/48000 (62%)]     Loss: 1.501075
+Train Epoch: 17 [40000/48000 (83%)]     Loss: 1.495711
+Val Average loss: 1.5001, Accuracy: 11530/12000 (96.08%)
+Test Average loss: 1.4983, Accuracy: 9631/10000 (96.31%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154, 1171, 1164, 1157, 1157, 1158, 1158, 1154, 1154, 1154, 1154, 1154]
+Power usage: [37, 15, 45, 46, 45, 45, 45, 18, 18, 17, 17, 18, 17, 17, 17, 14, 45]
+Utilization: [4, 9, 4, 4, 4, 4, 3, 9, 8, 9, 8, 8, 9, 9, 8, 9, 4]
+Time: 9.03516173362732
+
+ 85%|█████████████████████████████████████████████████████████████████████▋            | 17/20 [03:07<00:33, 11.31s/it]Train Epoch: 18 [0/48000 (0%)]   Loss: 1.503270
+Train Epoch: 18 [10000/48000 (21%)]     Loss: 1.461186
+Train Epoch: 18 [20000/48000 (42%)]     Loss: 1.471163
+Train Epoch: 18 [30000/48000 (62%)]     Loss: 1.471158
+Train Epoch: 18 [40000/48000 (83%)]     Loss: 1.471152
+Val Average loss: 1.4937, Accuracy: 11606/12000 (96.72%)
+Test Average loss: 1.4900, Accuracy: 9711/10000 (97.11%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154, 1171, 1164, 1157, 1157, 1158, 1158, 1154, 1154, 1154, 1154, 1154, 1154]
+Power usage: [37, 15, 45, 46, 45, 45, 45, 18, 18, 17, 17, 18, 17, 17, 17, 14, 45, 46]
+Utilization: [4, 9, 4, 4, 4, 4, 3, 9, 8, 9, 8, 8, 9, 9, 8, 9, 4, 4]
+Time: 8.977176427841187
+
+ 90%|█████████████████████████████████████████████████████████████████████████▊        | 18/20 [03:16<00:21, 10.61s/it]Train Epoch: 19 [0/48000 (0%)]   Loss: 1.471350
+Train Epoch: 19 [10000/48000 (21%)]     Loss: 1.482447
+Train Epoch: 19 [20000/48000 (42%)]     Loss: 1.480913
+Train Epoch: 19 [30000/48000 (62%)]     Loss: 1.498952
+Train Epoch: 19 [40000/48000 (83%)]     Loss: 1.481160
+Val Average loss: 1.4922, Accuracy: 11620/12000 (96.83%)
+Test Average loss: 1.4869, Accuracy: 9744/10000 (97.44%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154, 1171, 1164, 1157, 1157, 1158, 1158, 1154, 1154, 1154, 1154, 1154, 1154, 1154]
+Power usage: [37, 15, 45, 46, 45, 45, 45, 18, 18, 17, 17, 18, 17, 17, 17, 14, 45, 46, 45]
+Utilization: [4, 9, 4, 4, 4, 4, 3, 9, 8, 9, 8, 8, 9, 9, 8, 9, 4, 4, 4]
+Time: 9.024412631988525
+
+ 95%|█████████████████████████████████████████████████████████████████████████████▉    | 19/20 [03:25<00:10, 10.14s/it]Train Epoch: 20 [0/48000 (0%)]   Loss: 1.479728
+Train Epoch: 20 [10000/48000 (21%)]     Loss: 1.481229
+Train Epoch: 20 [20000/48000 (42%)]     Loss: 1.471593
+Train Epoch: 20 [30000/48000 (62%)]     Loss: 1.484285
+Train Epoch: 20 [40000/48000 (83%)]     Loss: 1.461189
+Val Average loss: 1.4981, Accuracy: 11552/12000 (96.27%)
+Test Average loss: 1.4938, Accuracy: 9671/10000 (96.71%)
+Memory usage: [1153, 1154, 1154, 1154, 1154, 1154, 1171, 1164, 1157, 1157, 1158, 1158, 1154, 1154, 1154, 1154, 1154, 1154, 1154, 1154]
+Power usage: [37, 15, 45, 46, 45, 45, 45, 18, 18, 17, 17, 18, 17, 17, 17, 14, 45, 46, 45, 46]
+Utilization: [4, 9, 4, 4, 4, 4, 3, 9, 8, 9, 8, 8, 9, 9, 8, 9, 4, 4, 4, 4]
+Time: 8.986548662185669
+
+100%|██████████████████████████████████████████████████████████████████████████████████| 20/20 [03:34<00:00, 10.71s/it]
+
+seed: 42
+device: cuda
+input:
+  path: datasets
+  batch_size: 100
+model:
+  peer_normalization: 0.03
+  momentum: 0.9
+  hidden_dim: 1000
+  num_layers: 3
+training:
+  epochs: 20
+  learning_rate: 0.001
+  weight_decay: 0.0003
+  momentum: 0.9
+  downstream_learning_rate: 0.01
+  downstream_weight_decay: 0.003
+  val_idx: -1
+  final_test: false
+
+FF_model(
+  (model): ModuleList(
+    (0): Linear(in_features=784, out_features=1000, bias=True)
+    (1-2): 2 x Linear(in_features=1000, out_features=1000, bias=True)
+  )
+  (ff_loss): BCEWithLogitsLoss()
+  (linear_classifier): Sequential(
+    (0): Linear(in_features=2000, out_features=10, bias=False)
+  )
+  (classification_loss): CrossEntropyLoss()
+)
+
+MNIST
+  0%|                                                                                           | 0/20 [00:00<?, ?it/s]C:\Users\Gabriel\Code\FF_DP_2024\src\ff_mnist.py:45: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  torch.tensor(wrong_class_label), num_classes=self.num_classes
+Memory usage: [1180]
+Power usage: [51]
+Utilization: [13]
+Epoch 0         train   Time: 0:00:13.578927
+Loss: 114.7144   Peer Normalization: 0.3619
+loss_layer_0: 22.1084    ff_accuracy_layer_0: 0.7694
+loss_layer_1: 42.9738    ff_accuracy_layer_1: 0.7504
+loss_layer_2: 49.1048    ff_accuracy_layer_2: 0.7290
+classification_loss: 0.5166      classification_accuracy: 0.8583
+
+  5%|████▏                                                                              | 1/20 [00:13<04:17, 13.57s/it]Memory usage: [1180, 1161]
+Power usage: [51, 49]
+Utilization: [13, 10]
+Epoch 1         train   Time: 0:00:12.170205
+Loss: 26.1646    Peer Normalization: 0.3792
+loss_layer_0: 5.7994     ff_accuracy_layer_0: 0.8800
+loss_layer_1: 8.1518     ff_accuracy_layer_1: 0.9096
+loss_layer_2: 11.9490    ff_accuracy_layer_2: 0.9029
+classification_loss: 0.2529      classification_accuracy: 0.9265
+
+ 10%|████████▎                                                                          | 2/20 [00:25<03:49, 12.75s/it]Memory usage: [1180, 1161, 1161]
+Power usage: [51, 49, 48]
+Utilization: [13, 10, 10]
+Epoch 2         train   Time: 0:00:12.038001
+Loss: 16.3311    Peer Normalization: 0.3919
+loss_layer_0: 4.4253     ff_accuracy_layer_0: 0.9062
+loss_layer_1: 5.1025     ff_accuracy_layer_1: 0.9365
+loss_layer_2: 6.6016     ff_accuracy_layer_2: 0.9362
+classification_loss: 0.1900      classification_accuracy: 0.9432
+
+ 15%|████████████▍                                                                      | 3/20 [00:37<03:31, 12.42s/it]Memory usage: [1180, 1161, 1161, 1161]
+Power usage: [51, 49, 48, 21]
+Utilization: [13, 10, 10, 23]
+Epoch 3         train   Time: 0:00:13.571219
+Loss: 13.6988    Peer Normalization: 0.3694
+loss_layer_0: 3.6813     ff_accuracy_layer_0: 0.9193
+loss_layer_1: 3.9892     ff_accuracy_layer_1: 0.9487
+loss_layer_2: 5.8489     ff_accuracy_layer_2: 0.9435
+classification_loss: 0.1684      classification_accuracy: 0.9497
+
+ 20%|████████████████▌                                                                  | 4/20 [00:51<03:26, 12.88s/it]Memory usage: [1180, 1161, 1161, 1161, 1160]
+Power usage: [51, 49, 48, 21, 20]
+Utilization: [13, 10, 10, 23, 28]
+Epoch 4         train   Time: 0:00:15.701743
+Loss: 10.9478    Peer Normalization: 0.3643
+loss_layer_0: 3.0673     ff_accuracy_layer_0: 0.9282
+loss_layer_1: 3.3345     ff_accuracy_layer_1: 0.9566
+loss_layer_2: 4.3990     ff_accuracy_layer_2: 0.9529
+classification_loss: 0.1361      classification_accuracy: 0.9584
+
+ 25%|████████████████████▊                                                              | 5/20 [01:07<03:28, 13.90s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21]
+Utilization: [13, 10, 10, 23, 28, 25]
+Epoch 5         train   Time: 0:00:15.648246
+Loss: 9.3790     Peer Normalization: 0.3729
+loss_layer_0: 3.2454     ff_accuracy_layer_0: 0.9290
+loss_layer_1: 2.6094     ff_accuracy_layer_1: 0.9631
+loss_layer_2: 3.3987     ff_accuracy_layer_2: 0.9604
+classification_loss: 0.1144      classification_accuracy: 0.9647
+
+ 30%|████████████████████████▉                                                          | 6/20 [01:22<03:22, 14.49s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21, 19]
+Utilization: [13, 10, 10, 23, 28, 25, 28]
+Epoch 6         train   Time: 0:00:15.697896
+Loss: 8.2702     Peer Normalization: 0.3777
+loss_layer_0: 2.2689     ff_accuracy_layer_0: 0.9444
+loss_layer_1: 2.3551     ff_accuracy_layer_1: 0.9659
+loss_layer_2: 3.5292     ff_accuracy_layer_2: 0.9612
+classification_loss: 0.1057      classification_accuracy: 0.9668
+
+ 35%|█████████████████████████████                                                      | 7/20 [01:38<03:13, 14.89s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21, 19, 17]
+Utilization: [13, 10, 10, 23, 28, 25, 28, 31]
+Epoch 7         train   Time: 0:00:15.812289
+Loss: 6.9483     Peer Normalization: 0.3603
+loss_layer_0: 2.1796     ff_accuracy_layer_0: 0.9464
+loss_layer_1: 1.9541     ff_accuracy_layer_1: 0.9713
+loss_layer_2: 2.7129     ff_accuracy_layer_2: 0.9665
+classification_loss: 0.0908      classification_accuracy: 0.9720
+
+ 40%|█████████████████████████████████▏                                                 | 8/20 [01:54<03:02, 15.18s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160, 1160, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21, 19, 17, 20]
+Utilization: [13, 10, 10, 23, 28, 25, 28, 31, 26]
+Epoch 8         train   Time: 0:00:15.813616
+Loss: 6.3591     Peer Normalization: 0.3769
+loss_layer_0: 1.9870     ff_accuracy_layer_0: 0.9490
+loss_layer_1: 1.7570     ff_accuracy_layer_1: 0.9732
+loss_layer_2: 2.5154     ff_accuracy_layer_2: 0.9681
+classification_loss: 0.0884      classification_accuracy: 0.9724
+
+ 45%|█████████████████████████████████████▎                                             | 9/20 [02:10<02:49, 15.38s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160, 1160, 1160, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21, 19, 17, 20, 20]
+Utilization: [13, 10, 10, 23, 28, 25, 28, 31, 26, 28]
+Epoch 9         train   Time: 0:00:15.620259
+Loss: 6.1424     Peer Normalization: 0.3801
+loss_layer_0: 2.0172     ff_accuracy_layer_0: 0.9496
+loss_layer_1: 1.6662     ff_accuracy_layer_1: 0.9749
+loss_layer_2: 2.3690     ff_accuracy_layer_2: 0.9699
+classification_loss: 0.0786      classification_accuracy: 0.9757
+
+ 50%|█████████████████████████████████████████                                         | 10/20 [02:25<02:34, 15.45s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160, 1160, 1160, 1160, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21, 19, 17, 20, 20, 20]
+Utilization: [13, 10, 10, 23, 28, 25, 28, 31, 26, 28, 24]
+Epoch 10        train   Time: 0:00:15.642481
+Loss: 5.3054     Peer Normalization: 0.3694
+loss_layer_0: 1.7818     ff_accuracy_layer_0: 0.9554
+loss_layer_1: 1.3787     ff_accuracy_layer_1: 0.9779
+loss_layer_2: 2.0646     ff_accuracy_layer_2: 0.9721
+classification_loss: 0.0692      classification_accuracy: 0.9781
+
+ 55%|█████████████████████████████████████████████                                     | 11/20 [02:41<02:19, 15.51s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21, 19, 17, 20, 20, 20, 20]
+Utilization: [13, 10, 10, 23, 28, 25, 28, 31, 26, 28, 24, 24]
+Epoch 11        train   Time: 0:00:15.596705
+Loss: 5.2292     Peer Normalization: 0.3781
+loss_layer_0: 1.5256     ff_accuracy_layer_0: 0.9587
+loss_layer_1: 1.3884     ff_accuracy_layer_1: 0.9774
+loss_layer_2: 2.2361     ff_accuracy_layer_2: 0.9710
+classification_loss: 0.0677      classification_accuracy: 0.9785
+
+ 60%|█████████████████████████████████████████████████▏                                | 12/20 [02:56<02:04, 15.54s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21, 19, 17, 20, 20, 20, 20, 18]
+Utilization: [13, 10, 10, 23, 28, 25, 28, 31, 26, 28, 24, 24, 27]
+Epoch 12        train   Time: 0:00:15.572170
+Loss: 4.1538     Peer Normalization: 0.3793
+loss_layer_0: 1.3389     ff_accuracy_layer_0: 0.9629
+loss_layer_1: 1.0978     ff_accuracy_layer_1: 0.9816
+loss_layer_2: 1.6497     ff_accuracy_layer_2: 0.9768
+classification_loss: 0.0560      classification_accuracy: 0.9826
+
+ 65%|█████████████████████████████████████████████████████▎                            | 13/20 [03:12<01:48, 15.55s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21, 19, 17, 20, 20, 20, 20, 18, 20]
+Utilization: [13, 10, 10, 23, 28, 25, 28, 31, 26, 28, 24, 24, 27, 24]
+Epoch 13        train   Time: 0:00:15.674729
+Loss: 3.2540     Peer Normalization: 0.3977
+loss_layer_0: 1.1183     ff_accuracy_layer_0: 0.9674
+loss_layer_1: 0.8394     ff_accuracy_layer_1: 0.9841
+loss_layer_2: 1.2356     ff_accuracy_layer_2: 0.9800
+classification_loss: 0.0488      classification_accuracy: 0.9841
+
+ 70%|█████████████████████████████████████████████████████████▍                        | 14/20 [03:28<01:33, 15.59s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21, 19, 17, 20, 20, 20, 20, 18, 20, 20]
+Utilization: [13, 10, 10, 23, 28, 25, 28, 31, 26, 28, 24, 24, 27, 24, 28]
+Epoch 14        train   Time: 0:00:15.530111
+Loss: 2.5204     Peer Normalization: 0.4074
+loss_layer_0: 0.7878     ff_accuracy_layer_0: 0.9737
+loss_layer_1: 0.6431     ff_accuracy_layer_1: 0.9863
+loss_layer_2: 1.0350     ff_accuracy_layer_2: 0.9822
+classification_loss: 0.0423      classification_accuracy: 0.9865
+
+ 75%|█████████████████████████████████████████████████████████████▌                    | 15/20 [03:43<01:17, 15.57s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21, 19, 17, 20, 20, 20, 20, 18, 20, 20, 20]
+Utilization: [13, 10, 10, 23, 28, 25, 28, 31, 26, 28, 24, 24, 27, 24, 28, 24]
+Epoch 15        train   Time: 0:00:15.569803
+Loss: 2.0671     Peer Normalization: 0.4282
+loss_layer_0: 0.6112     ff_accuracy_layer_0: 0.9776
+loss_layer_1: 0.5779     ff_accuracy_layer_1: 0.9874
+loss_layer_2: 0.8272     ff_accuracy_layer_2: 0.9844
+classification_loss: 0.0379      classification_accuracy: 0.9883
+
+ 80%|█████████████████████████████████████████████████████████████████▌                | 16/20 [03:59<01:02, 15.57s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21, 19, 17, 20, 20, 20, 20, 18, 20, 20, 20, 20]
+Utilization: [13, 10, 10, 23, 28, 25, 28, 31, 26, 28, 24, 24, 27, 24, 28, 24, 28]
+Epoch 16        train   Time: 0:00:15.599838
+Loss: 1.6338     Peer Normalization: 0.4430
+loss_layer_0: 0.5023     ff_accuracy_layer_0: 0.9804
+loss_layer_1: 0.4341     ff_accuracy_layer_1: 0.9893
+loss_layer_2: 0.6508     ff_accuracy_layer_2: 0.9865
+classification_loss: 0.0333      classification_accuracy: 0.9900
+
+ 85%|█████████████████████████████████████████████████████████████████████▋            | 17/20 [04:14<00:46, 15.58s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21, 19, 17, 20, 20, 20, 20, 18, 20, 20, 20, 20, 20]
+Utilization: [13, 10, 10, 23, 28, 25, 28, 31, 26, 28, 24, 24, 27, 24, 28, 24, 28, 25]
+Epoch 17        train   Time: 0:00:15.603303
+Loss: 1.2351     Peer Normalization: 0.4643
+loss_layer_0: 0.3591     ff_accuracy_layer_0: 0.9849
+loss_layer_1: 0.3255     ff_accuracy_layer_1: 0.9913
+loss_layer_2: 0.5064     ff_accuracy_layer_2: 0.9885
+classification_loss: 0.0301      classification_accuracy: 0.9915
+
+ 90%|█████████████████████████████████████████████████████████████████████████▊        | 18/20 [04:30<00:31, 15.59s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21, 19, 17, 20, 20, 20, 20, 18, 20, 20, 20, 20, 20, 20]
+Utilization: [13, 10, 10, 23, 28, 25, 28, 31, 26, 28, 24, 24, 27, 24, 28, 24, 28, 25, 29]
+Epoch 18        train   Time: 0:00:15.582414
+Loss: 1.0062     Peer Normalization: 0.4825
+loss_layer_0: 0.3135     ff_accuracy_layer_0: 0.9861
+loss_layer_1: 0.2555     ff_accuracy_layer_1: 0.9928
+loss_layer_2: 0.3949     ff_accuracy_layer_2: 0.9898
+classification_loss: 0.0278      classification_accuracy: 0.9920
+
+ 95%|█████████████████████████████████████████████████████████████████████████████▉    | 19/20 [04:46<00:15, 15.59s/it]Memory usage: [1180, 1161, 1161, 1161, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160, 1160]
+Power usage: [51, 49, 48, 21, 20, 21, 19, 17, 20, 20, 20, 20, 18, 20, 20, 20, 20, 20, 20, 20]
+Utilization: [13, 10, 10, 23, 28, 25, 28, 31, 26, 28, 24, 24, 27, 24, 28, 24, 28, 25, 29, 24]
+Epoch 19        train   Time: 0:00:15.615085
+Loss: 0.7093     Peer Normalization: 0.5029
+loss_layer_0: 0.2234     ff_accuracy_layer_0: 0.9890
+loss_layer_1: 0.1756     ff_accuracy_layer_1: 0.9941
+loss_layer_2: 0.2688     ff_accuracy_layer_2: 0.9916
+classification_loss: 0.0265      classification_accuracy: 0.9931
+
+100%|██████████████████████████████████████████████████████████████████████████████████| 20/20 [05:01<00:00, 15.08s/it]
+val
+val     Time: 0:00:02.169159
+Loss: 0.0654     classification_loss: 0.0654
+classification_accuracy: 0.9820

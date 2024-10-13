@@ -129,18 +129,18 @@ hydra:
   runtime:
     version: 1.3.2
     version_base: '1.3'
-    cwd: /bigdata/users/20658133/Forward-Forward
+    cwd: C:\Users\Gabriel\Code\FF_DP_2024
     config_sources:
     - path: hydra.conf
       schema: pkg
       provider: hydra
-    - path: /bigdata/users/20658133/Forward-Forward
+    - path: C:\Users\Gabriel\Code\FF_DP_2024
       schema: file
       provider: main
     - path: ''
       schema: structured
       provider: schema
-    output_dir: /bigdata/users/20658133/Forward-Forward/logs
+    output_dir: C:\Users\Gabriel\Code\FF_DP_2024\logs
     choices:
       hydra/env: default
       hydra/callbacks: null

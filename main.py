@@ -14,17 +14,22 @@ from tqdm import tqdm
 from omegaconf import DictConfig
 
 from src import utils, loss_tracker, bp_model
-
+import gpustat
 
 def train(opt, model, optimizer, mnist=True):
 
     print("MNIST") if mnist else print("CIFAR10")
+    
     
     start_time = time.time()
     train_loader = utils.get_data(opt, "train", mnist)
     num_steps_per_epoch = len(train_loader)
 
     loss_track = loss_tracker.LossTracker(opt.model.num_layers)
+    
+    memory_usage = []
+    power_usage = []
+    util_usage = []
 
     for epoch in tqdm(range(opt.training.epochs)):
         train_results = defaultdict(float)
@@ -43,8 +48,18 @@ def train(opt, model, optimizer, mnist=True):
             train_results = utils.log_results(
                 train_results, scalar_outputs, num_steps_per_epoch
             )
-
+            
         
+        gpu_query = gpustat.GPUStatCollection.new_query()
+        memory_usage.append(gpu_query[0].memory_used)
+        print(f"Memory usage: {memory_usage}")
+        
+        power_usage.append(gpu_query[0].power_draw)
+        print(f"Power usage: {power_usage}")
+        
+        util_usage.append(gpu_query[0].utilization)
+        print(f"Utilization: {util_usage}")
+               
         # Record loss 
         loss_track.update(train_results, epoch)
 
@@ -55,6 +70,13 @@ def train(opt, model, optimizer, mnist=True):
         if epoch % opt.training.val_idx == 0 and opt.training.val_idx != -1:
             validate_or_test(opt, model, "val", mnist, epoch=epoch)
 
+    # Creating and saving a dataframe of memory, power and utilization at each epoch
+    epoch_data = {"Epoch": range(1, opt.training.epochs+1),
+                  "Memory": memory_usage,
+                  "Power": power_usage,
+                  "Utilization": util_usage}
+    pd.DataFrame(epoch_data).to_csv("./Outputs/FF_epoch_data.csv", index=False)
+     
     # Save loss plot at end of training
     loss_track.plot()
 
@@ -130,12 +152,30 @@ def bp_main(opt: DictConfig) -> None:
     val_losses = []
     val_accs = []
     epoch_timestamps = []
+     
+    memory_usage = []
+    power_usage = []
+    util_usage = []
+
+
 
     for epoch in tqdm(range(1,epochs+1)):
         bp_start_time = time.time()
         train_loss = utils.train(bp_net, device, train_loader, optim, loss_fn, epoch)
         val_loss, val_accuracy = utils.evaluate(bp_net, device, val_loader, loss_fn, True)
-        test_loss, test_accuracy = utils.evaluate(bp_net, device, test_loader, loss_fn)
+        test_loss, test_accuracy = utils.evaluate(bp_net, device, test_loader, loss_fn)        
+        
+        gpu_query = gpustat.GPUStatCollection.new_query()
+        memory_usage.append(gpu_query[0].memory_used)
+        print(f"Memory usage: {memory_usage}")
+        
+        power_usage.append(gpu_query[0].power_draw)
+        print(f"Power usage: {power_usage}")
+        
+        util_usage.append(gpu_query[0].utilization)
+        print(f"Utilization: {util_usage}")
+               
+ 
         
         train_losses.append(train_loss)
         val_losses.append(val_loss)
@@ -143,7 +183,14 @@ def bp_main(opt: DictConfig) -> None:
         print(f'Time: {time.time() - bp_start_time}')
         print()
         epoch_timestamps.append((epoch, time.time() - bp_start_time))
-        
+    
+    epoch_data = {"Epoch": range(1, opt.training.epochs+1),
+                  "Memory": memory_usage,
+                  "Power": power_usage,
+                  "Utilization": util_usage}
+    pd.DataFrame(epoch_data).to_csv("./Outputs/BP_epoch_data.csv", index=False)
+     
+   
 
     # plot BP training time per epoch
     ep , t = zip(*epoch_timestamps)
@@ -208,9 +255,10 @@ if __name__ == "__main__":
     bp_main()
     BP_end_time = time.time()
 
-    time.sleep(10)
 
     print()
+    torch.cuda.empty_cache()
+    time.sleep(10)
 
     ##### RUN FF algorithm #####
     FF_start_time = time.time()
