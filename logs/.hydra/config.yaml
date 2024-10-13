@@ -9,11 +9,11 @@ model:
   hidden_dim: 1000
   num_layers: 3
 training:
-  epochs: 20
+  epochs: 5
   learning_rate: 0.001
   weight_decay: 0.0003
   momentum: 0.9
   downstream_learning_rate: 0.01
   downstream_weight_decay: 0.003
-  val_idx: -1
-  final_test: false
+  val_idx: 1
+  final_test: true
