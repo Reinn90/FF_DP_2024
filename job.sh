@@ -9,7 +9,7 @@
 
 
 ##SBATCH --nodelist=a100-101   # when using 80gb node
-#SBATCH --partition=ampere80
+#SBATCH --partition=ampere40
 ##SBATCH --partition=cpu # the double hash means that SLURM won't read this line.
 
 # load the python module

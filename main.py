@@ -118,7 +118,6 @@ def ff_main(opt: DictConfig) -> None:
     # True = mnist, False = cifar10
     mnist_T_cifar_F = True
     
-    model_start_time = time.time()
     opt = utils.parse_args(opt)
     model, optimizer = utils.get_model_and_optimizer(opt, "mnist") # mnist/cifar10
     model = train(opt, model, optimizer, mnist_T_cifar_F) 
@@ -126,8 +125,6 @@ def ff_main(opt: DictConfig) -> None:
 
     if opt.training.final_test:
         validate_or_test(opt, model, "test", mnist_T_cifar_F) 
-
-    model_total_time = time.time() - model_start_time
     
 
 @hydra.main(config_path=".", config_name="config", version_base=None)
@@ -171,7 +168,7 @@ def bp_main(opt: DictConfig) -> None:
         bp_start_time = time.time()
         train_loss = utils.train(bp_net, device, train_loader, optim, loss_fn, epoch)
         val_loss, val_accuracy = utils.evaluate(bp_net, device, val_loader, loss_fn, True)
-        test_loss, test_accuracy = utils.evaluate(bp_net, device, test_loader, loss_fn)        
+                
         
         gpu_query = gpustat.GPUStatCollection.new_query()
         memory_usage.append(gpu_query[0].memory_used)
@@ -198,7 +195,9 @@ def bp_main(opt: DictConfig) -> None:
                   "Utilization": util_usage,
                   "Val_Acc": val_accs}
     pd.DataFrame(epoch_data).to_csv("./Outputs/BP_epoch_data.csv", index=False)
-     
+
+    # Test on full trained net
+    test_loss, test_accuracy = utils.evaluate(bp_net, device, test_loader, loss_fn)
    
 
     # plot BP training time per epoch
@@ -302,7 +301,7 @@ if __name__ == "__main__":
     util_values = [x[1] for x in util_log]
 
     memory_timestamps = [x[0] for x in memory_log]
-    memory_values = [x[1] for x in memory_log] # convert to MB
+    memory_values = [x[1] for x in memory_log]
     
     ## Saving log data as CSV
     pd.DataFrame(power_log, columns=["Timestamp", "Value"]).to_csv("./Outputs/power_log.csv" , index = False)

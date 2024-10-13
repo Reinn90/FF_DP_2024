@@ -50,12 +50,12 @@ print("="*50)
 ## Memory usage ##
 # BP
 BP_mem = memory_log[(memory_log["Timestamp"] >= BP_start_time) & (memory_log["Timestamp"] <= BP_end_time)]["Value"].mean()
-print(f"Average BP memory usage: {BP_mem}")
-print("Total BP memory usage: ", (BP_mem * BP_runtime))
+print(f"Average BP memory usage: {BP_mem/1000:.2f} GB")
+print(f"Total BP memory usage: {((BP_mem * BP_runtime)/1000):.2f} GB")
 # FF
 FF_mem = memory_log[(memory_log["Timestamp"] >= FF_start_time) & (memory_log["Timestamp"] <= FF_end_time)]["Value"].mean()
-print(f"Average FF memory usage: {FF_mem}")
-print("Total FF memory usage: ", (FF_mem * FF_runtime))
+print(f"Average FF memory usage: {FF_mem/1000:.2f} GB")
+print(f"Total FF memory usage: {((FF_mem * FF_runtime)/1000):.2f} GB")
 print("="*50)
 
 ## Power Usage ##
@@ -75,7 +75,7 @@ print("="*50)
 # Plotting validation accuracy per epoch
 plt.plot(BP_epoch_data["Epoch"], BP_epoch_data["Val_Acc"], label="BP")
 plt.plot(FF_epoch_data["Epoch"], FF_epoch_data["Val_Acc"], label="FF")
-plt.axhline(y=0.99, color='r', linestyle='--')
+plt.axhline(y=0.98, color='r', linestyle='--')
 plt.title('Validation Accuracy per Epoch')
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
@@ -98,10 +98,10 @@ plt.savefig("./images/util_log.png")
 plt.clf()
 
 # Memory usage
-plt.plot(memory_log["Timestamp"], memory_log["Value"])
+plt.plot(memory_log["Timestamp"], memory_log["Value"]/1000)
 plt.title('Memory Usage')
 plt.xlabel('Timestamp (UTC)')
-plt.ylabel('Memory Usage (MB)')
+plt.ylabel('Memory Usage (GB)')
 plt.axvline(x=BP_start_time, color="r", linestyle="--", label="BP Start")
 plt.axvline(x=BP_end_time, color="r", linestyle="--", label="BP End")
 plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
@@ -125,11 +125,11 @@ plt.clf()
 
 ###### Metrics per epoch ######
 # Plotting  memory data for each epoch
-plt.plot(BP_epoch_data["Epoch"], BP_epoch_data["Memory"], label="BP")
-plt.plot(FF_epoch_data["Epoch"], FF_epoch_data["Memory"], label="FF")
+plt.plot(BP_epoch_data["Epoch"], BP_epoch_data["Memory"]/1000, label="BP")
+plt.plot(FF_epoch_data["Epoch"], FF_epoch_data["Memory"]/1000, label="FF")
 plt.title('Memory Usage per Epoch')
 plt.xlabel('Epoch')
-plt.ylabel('Memory Usage (MB)')
+plt.ylabel('Memory Usage (GB)')
 plt.legend()
 plt.savefig("./images/memory_epoch.png")
 plt.clf()
