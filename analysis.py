@@ -25,15 +25,10 @@ print(f"BP runtime: {timedelta(seconds=BP_runtime)}")
 print(f"FF runtime: {timedelta(seconds=FF_runtime)}")
 print("="*50)
 
-# Interpolate when running independent epoch
-while len(FF_epoch_data["Memory"]) < len(BP_epoch_data["Memory"]):
-    FF_epoch_data["Memory"] = FF_epoch_data["Memory"].append(0)
-    
-while len(FF_epoch_data["Power"]) < len(BP_epoch_data["Power"]):
-    FF_epoch_data["Power"] = FF_epoch_data["Power"].append(0)
-    
-while len(FF_epoch_data["Utilization"]) < len(BP_epoch_data["Utilization"]):
-    FF_epoch_data["Utilization"] = FF_epoch_data["Utilization"].append(0)
+#Interpolate values of FF when trained less than BP
+for column in ["Memory", "Power", "Utilization"]:
+    while len(FF_epoch_data[column]) < len(BP_epoch_data[column]):
+        FF_epoch_data.loc[len(FF_epoch_data.index), column] = 0
     
 
 ## Memory Util ##

@@ -151,7 +151,7 @@ def bp_main(opt: DictConfig) -> None:
 
     # Switch depending on training experiment
     epochs = opt.training.epochs          # same epoch
-    # epochs = 4                         # independent
+    # epochs = 50                            # independent
     
     train_losses = []
     val_losses = []
