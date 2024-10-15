@@ -30,6 +30,7 @@ def train(opt, model, optimizer, mnist=True):
     memory_usage = []
     power_usage = []
     util_usage = []
+    val_acc = []
 
     for epoch in tqdm(range(opt.training.epochs)):
         train_results = defaultdict(float)
@@ -52,13 +53,13 @@ def train(opt, model, optimizer, mnist=True):
         
         gpu_query = gpustat.GPUStatCollection.new_query()
         memory_usage.append(gpu_query[0].memory_used)
-        print(f"Memory usage: {memory_usage}")
+        # print(f"Memory usage: {memory_usage}")
         
         power_usage.append(gpu_query[0].power_draw)
-        print(f"Power usage: {power_usage}")
+        # print(f"Power usage: {power_usage}")
         
         util_usage.append(gpu_query[0].utilization)
-        print(f"Utilization: {util_usage}")
+        # print(f"Utilization: {util_usage}")
                
         # Record loss 
         loss_track.update(train_results, epoch)
@@ -68,13 +69,15 @@ def train(opt, model, optimizer, mnist=True):
 
         # Validate.
         if epoch % opt.training.val_idx == 0 and opt.training.val_idx != -1:
-            validate_or_test(opt, model, "val", mnist, epoch=epoch)
+            acc = validate_or_test(opt, model, "val", mnist, epoch=epoch)
+            val_acc.append(acc)
 
     # Creating and saving a dataframe of memory, power and utilization at each epoch
-    epoch_data = {"Epoch": range(1, opt.training.epochs+1),
+    epoch_data = {"Epoch": range(opt.training.epochs),
                   "Memory": memory_usage,
                   "Power": power_usage,
-                  "Utilization": util_usage}
+                  "Utilization": util_usage,
+                  "Val_Acc": val_acc}
     pd.DataFrame(epoch_data).to_csv("./Outputs/FF_epoch_data.csv", index=False)
      
     # Save loss plot at end of training
@@ -106,6 +109,8 @@ def validate_or_test(opt, model, partition, mnist=True, epoch=None):
     utils.print_results(partition, time.time() - test_time, test_results, epoch=epoch)
     model.train()
 
+    return (test_results["classification_accuracy"])
+
 
 @hydra.main(config_path=".", config_name="config", version_base=None)
 def ff_main(opt: DictConfig) -> None:
@@ -113,7 +118,6 @@ def ff_main(opt: DictConfig) -> None:
     # True = mnist, False = cifar10
     mnist_T_cifar_F = True
     
-    model_start_time = time.time()
     opt = utils.parse_args(opt)
     model, optimizer = utils.get_model_and_optimizer(opt, "mnist") # mnist/cifar10
     model = train(opt, model, optimizer, mnist_T_cifar_F) 
@@ -121,9 +125,7 @@ def ff_main(opt: DictConfig) -> None:
 
     if opt.training.final_test:
         validate_or_test(opt, model, "test", mnist_T_cifar_F) 
-
-    model_total_time = time.time() - model_start_time
-    # print(f"FF training time: {model_total_time//60}min {model_total_time%60:.2f}sec")
+    
 
 @hydra.main(config_path=".", config_name="config", version_base=None)
 def bp_main(opt: DictConfig) -> None:
@@ -146,8 +148,11 @@ def bp_main(opt: DictConfig) -> None:
 
     loss_fn = nn.CrossEntropyLoss().to(device)
     optim = torch.optim.Adam(bp_net.parameters(), lr=opt.training.learning_rate)
-    epochs = opt.training.epochs
 
+    # Switch depending on training experiment
+    epochs = opt.training.epochs          # same epoch
+    # epochs = 50                            # independent
+    
     train_losses = []
     val_losses = []
     val_accs = []
@@ -159,21 +164,21 @@ def bp_main(opt: DictConfig) -> None:
 
 
 
-    for epoch in tqdm(range(1,epochs+1)):
+    for epoch in tqdm(range(epochs)):
         bp_start_time = time.time()
         train_loss = utils.train(bp_net, device, train_loader, optim, loss_fn, epoch)
         val_loss, val_accuracy = utils.evaluate(bp_net, device, val_loader, loss_fn, True)
-        test_loss, test_accuracy = utils.evaluate(bp_net, device, test_loader, loss_fn)        
+                
         
         gpu_query = gpustat.GPUStatCollection.new_query()
         memory_usage.append(gpu_query[0].memory_used)
-        print(f"Memory usage: {memory_usage}")
+        # print(f"Memory usage: {memory_usage}")
         
         power_usage.append(gpu_query[0].power_draw)
-        print(f"Power usage: {power_usage}")
+        # print(f"Power usage: {power_usage}")
         
         util_usage.append(gpu_query[0].utilization)
-        print(f"Utilization: {util_usage}")
+        # print(f"Utilization: {util_usage}")
                
  
         
@@ -184,12 +189,15 @@ def bp_main(opt: DictConfig) -> None:
         print()
         epoch_timestamps.append((epoch, time.time() - bp_start_time))
     
-    epoch_data = {"Epoch": range(1, opt.training.epochs+1),
+    epoch_data = {"Epoch": range(epochs),
                   "Memory": memory_usage,
                   "Power": power_usage,
-                  "Utilization": util_usage}
+                  "Utilization": util_usage,
+                  "Val_Acc": val_accs}
     pd.DataFrame(epoch_data).to_csv("./Outputs/BP_epoch_data.csv", index=False)
-     
+
+    # Test on full trained net
+    test_loss, test_accuracy = utils.evaluate(bp_net, device, test_loader, loss_fn)
    
 
     # plot BP training time per epoch
@@ -293,7 +301,7 @@ if __name__ == "__main__":
     util_values = [x[1] for x in util_log]
 
     memory_timestamps = [x[0] for x in memory_log]
-    memory_values = [x[1] for x in memory_log] # convert to MB
+    memory_values = [x[1] for x in memory_log]
     
     ## Saving log data as CSV
     pd.DataFrame(power_log, columns=["Timestamp", "Value"]).to_csv("./Outputs/power_log.csv" , index = False)

@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import timedelta
@@ -24,18 +25,13 @@ print(f"BP runtime: {timedelta(seconds=BP_runtime)}")
 print(f"FF runtime: {timedelta(seconds=FF_runtime)}")
 print("="*50)
 
-##### Avg pwoer #####
-# BP
-# BP_power = power_log[(power_log["Timestamp"] >= BP_start_time) & (power_log["Timestamp"] <= BP_end_time)]["Value"].mean()
-# print(f"Average BP power: {BP_power}")
-# print("Total BP power consumed: ", (BP_power * BP_runtime))
-# FF
-# FF_power = power_log[(power_log["Timestamp"] >= FF_start_time) & (power_log["Timestamp"] <= FF_end_time)]["Value"].mean()
-# print(f"Average FF power: {FF_power}")
-# print("Total FF power consumed: ", (FF_power * FF_runtime))
-print("="*50)
+#Interpolate values of FF when trained less than BP
+for column in ["Memory", "Power", "Utilization"]:
+    while len(FF_epoch_data[column]) < len(BP_epoch_data[column]):
+        FF_epoch_data.loc[len(FF_epoch_data.index), column] = 0
+    
 
-##### Memory Util #####
+## Memory Util ##
 # BP 
 BP_util = util_log[(util_log["Timestamp"] >= BP_start_time) & (util_log["Timestamp"] <= BP_end_time)]["Value"].mean()
 print(f"Average BP utilization: {BP_util}")
@@ -46,18 +42,18 @@ print(f"Average FF utilization: {FF_util}")
 print("Total FF utilization: ", (FF_util * FF_runtime))
 print("="*50)
 
-##### Memory usage #####
+## Memory usage ##
 # BP
 BP_mem = memory_log[(memory_log["Timestamp"] >= BP_start_time) & (memory_log["Timestamp"] <= BP_end_time)]["Value"].mean()
-print(f"Average BP memory usage: {BP_mem}")
-print("Total BP memory usage: ", (BP_mem * BP_runtime))
+print(f"Average BP memory usage: {BP_mem/1000:.2f} GB")
+print(f"Total BP memory usage: {((BP_mem * BP_runtime)/1000):.2f} GB")
 # FF
 FF_mem = memory_log[(memory_log["Timestamp"] >= FF_start_time) & (memory_log["Timestamp"] <= FF_end_time)]["Value"].mean()
-print(f"Average FF memory usage: {FF_mem}")
-print("Total FF memory usage: ", (FF_mem * FF_runtime))
+print(f"Average FF memory usage: {FF_mem/1000:.2f} GB")
+print(f"Total FF memory usage: {((FF_mem * FF_runtime)/1000):.2f} GB")
 print("="*50)
 
-#### Power Usage ####
+## Power Usage ##
 # BP
 BP_power = power_log[(power_log["Timestamp"] >= BP_start_time) & (power_log["Timestamp"] <= BP_end_time)]["Value"].mean()
 print(f"Average BP power: {BP_power}")
@@ -70,19 +66,19 @@ print("="*50)
 
 
 #### Plots ####
-# # Function to print the power log
-# plt.plot(power_log["Timestamp"], power_log["Value"])
-# plt.title('Power Draw Comparison')
-# plt.xlabel('Timestamp (UTC)')
-# plt.ylabel('Power')
-# plt.axvline(x=BP_start_time, color="r", linestyle="--", label="BP Start")
-# plt.axvline(x=BP_end_time, color="r", linestyle="--", label="BP End")
-# plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
-# plt.axvline(x=FF_end_time, color="g", linestyle="--", label="FF End")
-# plt.legend()
-# plt.savefig("./images/power_log.png")
-# plt.clf()
 
+# Plotting validation accuracy per epoch
+plt.plot(BP_epoch_data["Epoch"], BP_epoch_data["Val_Acc"], label="BP")
+plt.plot(FF_epoch_data["Epoch"], FF_epoch_data["Val_Acc"], label="FF")
+plt.axhline(y=0.98, color='r', linestyle='--')
+plt.title('Validation Accuracy per Epoch')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.savefig("./images/val_acc_epoch.png")
+plt.clf()
+
+#### Metrics over time ####
 # Memory Utilization
 plt.plot(util_log["Timestamp"],util_log["Value"])
 plt.title('Memory Utilisation')
@@ -97,10 +93,10 @@ plt.savefig("./images/util_log.png")
 plt.clf()
 
 # Memory usage
-plt.plot(memory_log["Timestamp"], memory_log["Value"])
+plt.plot(memory_log["Timestamp"], memory_log["Value"]/1000)
 plt.title('Memory Usage')
 plt.xlabel('Timestamp (UTC)')
-plt.ylabel('Memory Usage (MB)')
+plt.ylabel('Memory Usage (GB)')
 plt.axvline(x=BP_start_time, color="r", linestyle="--", label="BP Start")
 plt.axvline(x=BP_end_time, color="r", linestyle="--", label="BP End")
 plt.axvline(x=FF_start_time, color="g", linestyle="--", label="FF Start")
@@ -122,12 +118,13 @@ plt.legend()
 plt.savefig("./images/power_log.png")
 plt.clf()
 
+###### Metrics per epoch ######
 # Plotting  memory data for each epoch
-plt.plot(BP_epoch_data["Epoch"], BP_epoch_data["Memory"], label="BP")
-plt.plot(FF_epoch_data["Epoch"], FF_epoch_data["Memory"], label="FF")
+plt.plot(BP_epoch_data["Epoch"], BP_epoch_data["Memory"]/1000, label="BP")
+plt.plot(FF_epoch_data["Epoch"], FF_epoch_data["Memory"]/1000, label="FF")
 plt.title('Memory Usage per Epoch')
 plt.xlabel('Epoch')
-plt.ylabel('Memory Usage (MB)')
+plt.ylabel('Memory Usage (GB)')
 plt.legend()
 plt.savefig("./images/memory_epoch.png")
 plt.clf()
@@ -152,8 +149,13 @@ plt.legend()
 plt.savefig("./images/util_epoch.png")
 plt.clf()
 
+##### Ratios #####
+power_ratio = FF_epoch_data["Power"] / BP_epoch_data["Power"]
+memory_ratio = FF_epoch_data["Memory"] / BP_epoch_data["Memory"]
+utilization_ratio = FF_epoch_data["Utilization"] / BP_epoch_data["Utilization"]
+
 # Plotting ratio of FF power usage to BP power usage
-plt.plot(BP_epoch_data["Epoch"], FF_epoch_data["Power"]/BP_epoch_data["Power"])
+plt.plot(BP_epoch_data["Epoch"], power_ratio)
 plt.axhline(y=1, color='r', linestyle='--')
 plt.title('FF/BP Power Usage Ratio')
 plt.xlabel('Epoch')
@@ -162,7 +164,7 @@ plt.savefig("./images/power_ratio.png")
 plt.clf()
 
 # Plotting ratio of FF memory usage to BP memory usage
-plt.plot(BP_epoch_data["Epoch"], FF_epoch_data["Memory"]/BP_epoch_data["Memory"])
+plt.plot(BP_epoch_data["Epoch"], memory_ratio)
 plt.axhline(y=1, color='r', linestyle='--')
 plt.title('FF/BP Memory Usage Ratio')
 plt.xlabel('Epoch')
@@ -171,10 +173,55 @@ plt.savefig("./images/memory_ratio.png")
 plt.clf()
 
 # Plotting ratio of FF utilization to BP utilization
-plt.plot(BP_epoch_data["Epoch"], FF_epoch_data["Utilization"]/BP_epoch_data["Utilization"])
+plt.plot(BP_epoch_data["Epoch"], utilization_ratio)
 plt.axhline(y=1, color='r', linestyle='--')
 plt.title('FF/BP Utilization Ratio')
 plt.xlabel('Epoch')
 plt.ylabel('FF/BP Utilization Ratio')
 plt.savefig("./images/util_ratio.png")
 plt.clf()
+
+######### Bootstrap Sampling #########
+n_bootstrap = 10000
+
+def bootstrap_test(ratio_data, n_bootstrap=10000, threshold=1, metric_name="Metric"):
+    bootstrap_means = np.zeros(n_bootstrap)
+    
+    # Perform bootstrap resampling
+    for i in range(n_bootstrap):
+        sample = np.random.choice(ratio_data, size=len(ratio_data), replace=True)
+        bootstrap_means[i] = np.mean(sample)
+    
+    # Step 2: Calculate the p-value for one-sided test (mean < 1)
+    p_value = np.sum(bootstrap_means < threshold) / n_bootstrap
+    
+    # Step 3: Plot bootstrap distribution
+    plt.hist(bootstrap_means, bins=30, alpha=0.7, color='blue', edgecolor='black')
+    plt.axvline(x=threshold, color='red', linestyle='--', label=f'Threshold = {threshold}')
+    plt.xlabel('Bootstrap Means')
+    plt.ylabel('Frequency')
+    plt.title(f'Bootstrap Distribution of {metric_name} Ratios')
+    plt.legend()
+    
+    # Save the plot
+    plt.savefig(f"./images/bootstrap_{metric_name.lower()}_ratio.png")
+    
+    # Show the plot
+    plt.show()
+    
+    # Print the result
+    print(f"Bootstrap Mean: {np.mean(bootstrap_means)}, P-value: {p_value}")
+    return p_value
+
+# Perform bootstrap test for each metric and save the plot
+# print("Bootstrap Test for Power Ratio:")
+# bootstrap_test(power_ratio, metric_name="Power")
+
+print("\nBootstrap Test for Memory Ratio:")
+bootstrap_test(memory_ratio, metric_name="Memory")
+bootstrap_test(power_ratio, metric_name="Power")
+bootstrap_test(utilization_ratio, metric_name="Utilization")
+
+
+# print("\nBootstrap Test for Utilization Ratio:")
+# bootstrap_test(utilization_ratio, metric_name="Utilization")
