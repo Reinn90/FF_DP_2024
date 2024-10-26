@@ -3,6 +3,7 @@ import random
 from datetime import timedelta
 
 import numpy as np
+import seaborn as sns
 import torch
 import torchvision
 from torchvision.datasets import MNIST, CIFAR10, CIFAR100
@@ -320,3 +321,146 @@ def log_gpu_mem(stop_event, log_queue):
         timestamp = time.time()
         log_queue.put((timestamp, value))
         #time.sleep(0.1)
+
+import matplotlib.pyplot as plt
+import torch
+import seaborn as sns
+import numpy as np
+
+def visualize_ff_weights(model, save_path="./images/"):
+    """
+    Visualize weight distributions and patterns for each layer of the FF network
+    
+    Args:
+        model: The trained FF_model instance
+        save_path: Directory to save the visualization plots
+    """
+    # Create directory if it doesn't exist
+    os.makedirs(save_path, exist_ok=True)
+    
+    # Set up the plotting style
+    plt.style.use('seaborn')
+    
+    # For each layer in the main model
+    for idx, layer in enumerate(model.model):
+        # Get the weights
+        weights = layer.weight.data.cpu().numpy()
+        
+        # Create a figure with 2 subplots (distribution and heatmap)
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
+        
+        # Plot 1: Weight Distribution
+        sns.histplot(weights.flatten(), kde=True, ax=ax1)
+        ax1.set_title(f'Layer {idx+1} Weight Distribution')
+        ax1.set_xlabel('Weight Value')
+        ax1.set_ylabel('Count')
+        
+        # Add distribution statistics
+        stats_text = f'Mean: {weights.mean():.4f}\n'
+        stats_text += f'Std: {weights.std():.4f}\n'
+        stats_text += f'Min: {weights.min():.4f}\n'
+        stats_text += f'Max: {weights.max():.4f}'
+        ax1.text(0.95, 0.95, stats_text,
+                transform=ax1.transAxes,
+                verticalalignment='top',
+                horizontalalignment='right',
+                bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+        
+        # Plot 2: Weight Matrix Heatmap
+        im = ax2.imshow(weights, cmap='RdBu', aspect='auto')
+        ax2.set_title(f'Layer {idx+1} Weight Matrix Heatmap')
+        ax2.set_xlabel('Output Features')
+        ax2.set_ylabel('Input Features')
+        plt.colorbar(im, ax=ax2)
+        
+        # Adjust layout and save
+        plt.tight_layout()
+        plt.savefig(f'{save_path}layer_{idx+1}_weights.png')
+        plt.close()
+        
+    # Visualize the classifier weights
+    classifier_weights = model.linear_classifier[0].weight.data.cpu().numpy()
+    
+    plt.figure(figsize=(12, 4))
+    
+    # Distribution of classifier weights
+    plt.subplot(121)
+    sns.histplot(classifier_weights.flatten(), kde=True)
+    plt.title('Classifier Weight Distribution')
+    plt.xlabel('Weight Value')
+    plt.ylabel('Count')
+    
+    # Heatmap of classifier weights
+    plt.subplot(122)
+    im = plt.imshow(classifier_weights, cmap='RdBu')
+    plt.title('Classifier Weight Matrix Heatmap')
+    plt.xlabel('Input Features')
+    plt.ylabel('Output Classes')
+    plt.colorbar(im)
+    
+    plt.tight_layout()
+    plt.savefig(f'{save_path}classifier_weights.png')
+    plt.close()
+    
+    # Additional Analysis: Weight Statistics Over Layers
+    layer_stats = []
+    for idx, layer in enumerate(model.model):
+        weights = layer.weight.data.cpu().numpy()
+        layer_stats.append({
+            'layer': idx+1,
+            'mean': weights.mean(),
+            'std': weights.std(),
+            'min': weights.min(),
+            'max': weights.max(),
+            'sparsity': np.mean(np.abs(weights) < 1e-5)  # Percentage of near-zero weights
+        })
+    
+    # Plot statistics across layers
+    fig, axes = plt.subplots(2, 2, figsize=(15, 10))
+    fig.suptitle('Weight Statistics Across Layers')
+    
+    # Mean and STD
+    ax = axes[0, 0]
+    layers = [stat['layer'] for stat in layer_stats]
+    means = [stat['mean'] for stat in layer_stats]
+    stds = [stat['std'] for stat in layer_stats]
+    ax.errorbar(layers, means, yerr=stds, fmt='o-')
+    ax.set_title('Mean Weights (with STD)')
+    ax.set_xlabel('Layer')
+    ax.set_ylabel('Weight Value')
+    
+    # Min/Max range
+    ax = axes[0, 1]
+    mins = [stat['min'] for stat in layer_stats]
+    maxs = [stat['max'] for stat in layer_stats]
+    ax.fill_between(layers, mins, maxs, alpha=0.3)
+    ax.plot(layers, mins, 'b--', label='Min')
+    ax.plot(layers, maxs, 'r--', label='Max')
+    ax.set_title('Weight Range')
+    ax.set_xlabel('Layer')
+    ax.set_ylabel('Weight Value')
+    ax.legend()
+    
+    # Sparsity
+    ax = axes[1, 0]
+    sparsity = [stat['sparsity'] * 100 for stat in layer_stats]
+    ax.bar(layers, sparsity)
+    ax.set_title('Weight Sparsity')
+    ax.set_xlabel('Layer')
+    ax.set_ylabel('% Near-zero Weights')
+    
+    # Weight magnitude distribution
+    ax = axes[1, 1]
+    for idx, layer in enumerate(model.model):
+        weights = layer.weight.data.cpu().numpy()
+        sns.kdeplot(np.abs(weights.flatten()), ax=ax, label=f'Layer {idx+1}')
+    ax.set_title('Weight Magnitude Distribution')
+    ax.set_xlabel('|Weight|')
+    ax.set_ylabel('Density')
+    ax.legend()
+    
+    plt.tight_layout()
+    plt.savefig(f'{save_path}weight_statistics.png')
+    plt.close()
+
+
