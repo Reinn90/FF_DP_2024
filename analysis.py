@@ -225,3 +225,56 @@ bootstrap_test(utilization_ratio, metric_name="Utilization")
 
 # print("\nBootstrap Test for Utilization Ratio:")
 # bootstrap_test(utilization_ratio, metric_name="Utilization")
+
+
+## Loading the Model weights ##
+import torch
+from torch import nn
+import torch.optim as optim
+from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import timedelta
+
+# Load the model
+BP_weights = torch.load("./Outputs/BP_model_weights.pth")
+print(BP_weights.keys())
+
+# Plotting the distribution of the weights
+plt.hist(BP_weights['f.0.weight'].flatten().cpu().detach().numpy(), bins=30, alpha=0.7, color='blue', edgecolor='black')
+plt.xlabel('Weight Values')
+plt.ylabel('Frequency')
+plt.title('Distribution of Weights')
+plt.savefig("./images/weights_distribution.png")
+print("="*50)
+
+# %% 
+
+# Plotting all the weights of the model in a single histogram
+fig, axs = plt.subplots(4, 2, figsize=(15, 25))
+axs = axs.ravel()
+for i, (key, value) in enumerate(BP_weights.items()):
+    axs[i].hist(value.flatten().cpu().detach().numpy(), bins=30, alpha=0.7, color='blue', edgecolor='black')
+    axs[i].set_title(f'Distribution of {key}')
+    axs[i].set_xlabel('Weight Values')
+    axs[i].set_ylabel('Frequency')
+
+# %%
+
+
+FF_weights = torch.load("./Outputs/FF_model_weights.pth")
+
+## Plotting all the weights of the model in a single histogram
+fig, axs = plt.subplots(4, 2, figsize=(15, 25))
+axs = axs.ravel()
+for i, (key, value) in enumerate(FF_weights.items()):
+    axs[i].hist(value.flatten().cpu().detach().numpy(), bins=30, alpha=0.7, color='blue', edgecolor='black')
+    axs[i].set_title(f'Distribution of {key}')
+    axs[i].set_xlabel('Weight Values')
+    axs[i].set_ylabel('Frequency')
+
+print("="*50)
+
+# %%

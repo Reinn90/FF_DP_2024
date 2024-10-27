@@ -129,6 +129,12 @@ def ff_main(opt: DictConfig) -> None:
     # Extracting network parameters
     print(f"Network parameters: {model.parameters()}")
 
+    # Plotting the model weights
+    state_dict = model.state_dict()
+    
+    torch.save(state_dict, f"./Outputs/FF_model_weights.pth")
+
+    
     if opt.training.final_test:
         validate_or_test(opt, model, "test", mnist_T_cifar_F) 
     
@@ -214,6 +220,12 @@ def bp_main(opt: DictConfig) -> None:
                   "Utilization": util_usage,
                   "Val_Acc": val_accs}
     pd.DataFrame.from_dict(epoch_data).to_csv(f"./Outputs/BP_epoch_data.csv", index=False)
+    
+    # Getting the state_dict of the model
+    print(f"Model state_dict: {bp_net.state_dict()}")
+    
+    # Saving the weights of the model
+    torch.save(bp_net.state_dict(), f"./Outputs/BP_model_weights.pth")
 
     # Test on full trained net
     test_loss, test_accuracy = utils.evaluate(bp_net, device, test_loader, loss_fn)
