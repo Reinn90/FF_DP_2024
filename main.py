@@ -136,7 +136,10 @@ def ff_main(opt: DictConfig) -> None:
 
     
     if opt.training.final_test:
-        validate_or_test(opt, model, "test", mnist_T_cifar_F) 
+        validate_or_test(opt, model, "test", mnist_T_cifar_F)
+
+    # Visualise training weights 
+    utils.visualize_ff_weights(model, save_path='./images/')
     
 
 @hydra.main(config_path=".", config_name="config", version_base=None)
