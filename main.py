@@ -16,7 +16,7 @@ from omegaconf import DictConfig
 from src import utils, loss_tracker, bp_model
 import gpustat
 
-def train(opt, model, optimizer, mnist=True):
+def train(itr: int, opt, model, optimizer, mnist=True):
 
     print("MNIST") if mnist else print("CIFAR10")
     
@@ -72,13 +72,16 @@ def train(opt, model, optimizer, mnist=True):
             acc = validate_or_test(opt, model, "val", mnist, epoch=epoch)
             val_acc.append(acc)
 
+        if acc > 0.97:
+            epochs = epoch + 1
+            break
     # Creating and saving a dataframe of memory, power and utilization at each epoch
-    epoch_data = {"Epoch": range(opt.training.epochs),
+    epoch_data = {"Epoch": range(epochs),
                   "Memory": memory_usage,
                   "Power": power_usage,
                   "Utilization": util_usage,
                   "Val_Acc": val_acc}
-    pd.DataFrame(epoch_data).to_csv("./Outputs/FF_epoch_data.csv", index=False)
+    pd.DataFrame(epoch_data).to_csv(f"./Outputs/FF_epoch_data.csv", index=False)
      
     # Save loss plot at end of training
     loss_track.plot()
@@ -120,8 +123,11 @@ def ff_main(opt: DictConfig) -> None:
     
     opt = utils.parse_args(opt)
     model, optimizer = utils.get_model_and_optimizer(opt, "mnist") # mnist/cifar10
-    model = train(opt, model, optimizer, mnist_T_cifar_F) 
+    model = train(itr, opt, model, optimizer, mnist_T_cifar_F) 
     validate_or_test(opt, model, "val", mnist_T_cifar_F)  
+    
+    # Extracting network parameters
+    print(f"Network parameters: {model.parameters()}")
 
     if opt.training.final_test:
         validate_or_test(opt, model, "test", mnist_T_cifar_F) 
@@ -153,6 +159,10 @@ def bp_main(opt: DictConfig) -> None:
     epochs = opt.training.epochs          # same epoch
     # epochs = 50                            # independent
     
+    # Extracting network parameters
+    print(f"Network parameters: {bp_net.parameters()}")
+    
+     
     train_losses = []
     val_losses = []
     val_accs = []
@@ -169,7 +179,6 @@ def bp_main(opt: DictConfig) -> None:
         train_loss = utils.train(bp_net, device, train_loader, optim, loss_fn, epoch)
         val_loss, val_accuracy = utils.evaluate(bp_net, device, val_loader, loss_fn, True)
                 
-        
         gpu_query = gpustat.GPUStatCollection.new_query()
         memory_usage.append(gpu_query[0].memory_used)
         # print(f"Memory usage: {memory_usage}")
@@ -188,13 +197,23 @@ def bp_main(opt: DictConfig) -> None:
         print(f'Time: {time.time() - bp_start_time}')
         print()
         epoch_timestamps.append((epoch, time.time() - bp_start_time))
+        
+        if val_accuracy > 0.97:
+            epochs = epoch + 1
+            break
+    
+    print(len(range(epochs)))
+    print(len(memory_usage))
+    print(len(power_usage))
+    print(len(util_usage))
+    print(len(val_accs))
     
     epoch_data = {"Epoch": range(epochs),
                   "Memory": memory_usage,
                   "Power": power_usage,
                   "Utilization": util_usage,
                   "Val_Acc": val_accs}
-    pd.DataFrame(epoch_data).to_csv("./Outputs/BP_epoch_data.csv", index=False)
+    pd.DataFrame.from_dict(epoch_data).to_csv(f"./Outputs/BP_epoch_data.csv", index=False)
 
     # Test on full trained net
     test_loss, test_accuracy = utils.evaluate(bp_net, device, test_loader, loss_fn)
@@ -233,85 +252,86 @@ def bp_main(opt: DictConfig) -> None:
 
 if __name__ == "__main__":
     
-   
-    ## Define logging queues
-    power_log_queue = queue.Queue()
-    util_log_queue = queue.Queue()
-    memory_log_queue = queue.Queue()
+    for itr in range(10):
+        print(f'Iteration: {itr}')
+        ## Define logging queues
+        power_log_queue = queue.Queue()
+        util_log_queue = queue.Queue()
+        memory_log_queue = queue.Queue()
 
-    ## Define stop event
-    stop_event = threading.Event()
+        ## Define stop event
+        stop_event = threading.Event()
 
-    ## Define logging threads
-    power_logging_thread = threading.Thread(
-        target=utils.log_gpu_power, args=(stop_event, power_log_queue)
-    )
-    util_logging_thread = threading.Thread(
-        target=utils.log_gpu_util, args=(stop_event, util_log_queue)
-    )
-    mem_logging_thread = threading.Thread(
-        target=utils.log_gpu_mem, args=(stop_event, memory_log_queue)
-    )
+        ## Define logging threads
+        power_logging_thread = threading.Thread(
+            target=utils.log_gpu_power, args=(stop_event, power_log_queue)
+        )
+        util_logging_thread = threading.Thread(
+            target=utils.log_gpu_util, args=(stop_event, util_log_queue)
+        )
+        mem_logging_thread = threading.Thread(
+            target=utils.log_gpu_mem, args=(stop_event, memory_log_queue)
+        )
 
-    ## Start logging threads
-    power_logging_thread.start()
-    util_logging_thread.start()
-    mem_logging_thread.start()
+        ## Start logging threads
+        power_logging_thread.start()
+        util_logging_thread.start()
+        mem_logging_thread.start()
 
-    ##### RUN BP #####
-    BP_start_time = time.time()
-    bp_main()
-    BP_end_time = time.time()
+        ##### RUN BP #####
+        BP_start_time = time.time()
+        bp_main()
+        BP_end_time = time.time()
 
 
-    print()
-    torch.cuda.empty_cache()
-    time.sleep(10)
+        print()
+        torch.cuda.empty_cache()
+        time.sleep(10)
 
-    ##### RUN FF algorithm #####
-    FF_start_time = time.time()
-    ff_main()
-    FF_end_time = time.time()
- 
+        ##### RUN FF algorithm #####
+        FF_start_time = time.time()
+        ff_main()
+        FF_end_time = time.time()
     
-    stop_event.set()
-    
-    mem_logging_thread.join()
-    util_logging_thread.join()
-    power_logging_thread.join()
 
-    ## Extracting logs
-    power_log = []
-    while not power_log_queue.empty():
-        power_log.append(power_log_queue.get())
+        stop_event.set()
 
-    util_log = []
-    while not util_log_queue.empty():
-        util_log.append(util_log_queue.get())
+        mem_logging_thread.join()
+        util_logging_thread.join()
+        power_logging_thread.join()
 
-    memory_log = []
-    while not memory_log_queue.empty():
-        memory_log.append(memory_log_queue.get())
+        ## Extracting logs
+        power_log = []
+        while not power_log_queue.empty():
+            power_log.append(power_log_queue.get())
 
-    ## Extracting timestamps
-    power_timestamps = [x[0] for x in power_log]
-    power_values = [x[1] for x in power_log]
+        util_log = []
+        while not util_log_queue.empty():
+            util_log.append(util_log_queue.get())
 
-    util_timestamps = [x[0] for x in util_log]
-    util_values = [x[1] for x in util_log]
+        memory_log = []
+        while not memory_log_queue.empty():
+            memory_log.append(memory_log_queue.get())
 
-    memory_timestamps = [x[0] for x in memory_log]
-    memory_values = [x[1] for x in memory_log]
-    
-    ## Saving log data as CSV
-    pd.DataFrame(power_log, columns=["Timestamp", "Value"]).to_csv("./Outputs/power_log.csv" , index = False)
-    pd.DataFrame(util_log, columns=["Timestamp", "Value"]).to_csv("./Outputs/util_log.csv", index=False)
-    pd.DataFrame(memory_log, columns=["Timestamp", "Value"]).to_csv("./Outputs/memory_log.csv", index=False)
-    
-    ## Saving FF and BP timestamps as CSV
-    model_timestamps = {"BP": [BP_start_time, BP_end_time],
-                        "FF": [FF_start_time, FF_end_time]}
-    pd.DataFrame(model_timestamps).to_csv("./Outputs/model_timestamps.csv", index = False)
+        ## Extracting timestamps
+        power_timestamps = [x[0] for x in power_log]
+        power_values = [x[1] for x in power_log]
+
+        util_timestamps = [x[0] for x in util_log]
+        util_values = [x[1] for x in util_log]
+
+        memory_timestamps = [x[0] for x in memory_log]
+        memory_values = [x[1] for x in memory_log]
+
+        ## Saving log data as CSV
+        pd.DataFrame(power_log, columns=["Timestamp", "Value"]).to_csv(f"./Outputs/power_log_{itr}.csv" , index = False)
+        pd.DataFrame(util_log, columns=["Timestamp", "Value"]).to_csv(f"./Outputs/util_log_{itr}.csv", index=False)
+        pd.DataFrame(memory_log, columns=["Timestamp", "Value"]).to_csv(f"./Outputs/memory_log_{itr}.csv", index=False)
+
+        ## Saving FF and BP timestamps as CSV
+        model_timestamps = {"BP": [BP_start_time, BP_end_time],
+                            "FF": [FF_start_time, FF_end_time]}
+        pd.DataFrame(model_timestamps).to_csv(f"./Outputs/model_timestamps_{itr}.csv", index = False)
 
 
 
