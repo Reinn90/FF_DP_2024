@@ -1,3 +1,29 @@
+# Western Sydney University Bachelor of Data Science Discovery Project 2024 - Evaluating the Efficiency of the Forward Forward Algorithm
+Project members:
+- Kevin Reyes
+- Gabriel Schussler
+
+## Abstract
+This research project examines the computational efficiency of Geoffrey Hinton’s
+Forward-Forward algorithm relative to traditional backpropagation in artificial neural network training. The Forward-Forward (FF) algorithm replaces the usual
+forward-backward cycle with two forward passes using positive and negative data
+samples, which may improve training speed and resource efficiency. We implemented
+both the FF and backpropagation (BP) algorithms in PyTorch, comparing their performance on the MNIST dataset in terms of training time, GPU memory usage, GPU
+utilisation, and power consumption.
+At a target accuracy of 97%, the FF algorith reached this thresold approximately
+50 seconds faster than BP and uses 20% less total power. Additionally, the FF
+method showed reduced GPU utilisation (27.39% vs 36.03%), indicating potential
+benefits in resource-limited settings, though memory usage was similar across methods. Although this study faced limitations related to hardware and implementation,
+the results suggest that the FF algorithm may provide valuable efficiency advantages, particularly in energy-sensitive contexts. Future research could explore the
+algorithm’s performance across other datasets, various network architectures, and
+applications beyond computer vision.
+
+
+
+
+
+Majority of the NN model code is take from the repo below, and augmented/repurposed for our project
+***
 # Reimplementation of the Forward-Forward Algorithm
 
 This is a reimplementation of Geoffrey Hinton's Forward-Forward Algorithm in Python/Pytorch.
